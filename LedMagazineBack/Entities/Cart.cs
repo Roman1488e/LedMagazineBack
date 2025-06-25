@@ -7,5 +7,5 @@ public class Cart
     public decimal TotalPrice { get; set; }
     public DateTime Created { get; set; }
     public Guid? SessionId { get; set; }
-    public Guid? UserId { get; set; }
+    public Guid? CustomerId { get; set; }
 }

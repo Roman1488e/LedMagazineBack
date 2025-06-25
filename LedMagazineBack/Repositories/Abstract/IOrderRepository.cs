@@ -10,5 +10,8 @@ public interface IOrderRepository : IBaseRepository<Order>
     public Task<List<Order>> GetByOrgName(string orgName);
     public Task<List<Order>> GetFiltered(DateTime? startDate, DateTime? endDate, decimal minPrice, decimal maxPrice);
     public Task<List<Order>> GetByProductId(Guid productId);
+    public Task<List<Order>> GetByUserId(Guid userId);
+    public Task<List<Order>> GetNotAccepted();
+    public Task<List<Order>> GetAccepted();
     public Task<List<Order>> GetByProductName(string productName);
 }
