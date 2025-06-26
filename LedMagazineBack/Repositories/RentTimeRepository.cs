@@ -46,9 +46,17 @@ public class RentTimeRepository(MagazineDbContext context) : IRentTimeRepository
         return rentTime;
     }
 
-    public async Task<RentTime> GetByOrderId(Guid orderId)
+    public async Task<RentTime> GetByCartItemId(Guid cartItemId)
     {
-        var rentTime = await _context.RentTimes.SingleOrDefaultAsync(x => x.OrderId == orderId);
+        var  rentTime = await _context.RentTimes.SingleOrDefaultAsync(x => x.Id == cartItemId);
+        if (rentTime is null)
+            throw new Exception("RentTime not found");
+        return rentTime;
+    }
+
+    public async Task<RentTime> GetByOrderItemId(Guid orderItemId)
+    {
+        var rentTime = await _context.RentTimes.SingleOrDefaultAsync(x => x.Id == orderItemId);
         if (rentTime is null)
             throw new Exception("RentTime not found");
         return rentTime;

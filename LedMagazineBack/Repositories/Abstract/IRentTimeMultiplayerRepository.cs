@@ -8,4 +8,5 @@ public interface IRentTimeMultiplayerRepository : IBaseRepository<RentTimeMultip
     public Task<RentTimeMultiplayer> GetById(Guid id);
     public Task<RentTimeMultiplayer> GetByСoefficient(float coefficient);
     public Task<RentTimeMultiplayer> GetByСoefficient(float min, float max);
+    public Task<RentTimeMultiplayer> GetByProductId(Guid productId);
 }

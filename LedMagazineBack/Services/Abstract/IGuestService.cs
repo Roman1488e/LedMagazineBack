@@ -1,10 +1,10 @@
 using LedMagazineBack.Entities;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.Abstract;
 
 public interface IGuestService
 {
-    public Task<Guest> Create();
+    public Task<string> Create();
     public Task<List<Guest>> GetAll();
     public Task<Guest> GetById(Guid id);
     public Task<Guest> GetBySessionId(Guid sessionId);

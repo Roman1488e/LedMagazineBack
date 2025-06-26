@@ -1,7 +1,7 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.Abstract;
 
 public interface ILocationService
 {
@@ -10,5 +10,5 @@ public interface ILocationService
     public Task<Location> GetByProductId(Guid productId);
     public Task<Location> Create(CreateLocationModel model);
     public Task<Location> Delete(Guid id);
-    public Task<Location> Update(UpdateLocationModel model);
+    public Task<Location> Update(Guid id, UpdateLocationModel model);
 }

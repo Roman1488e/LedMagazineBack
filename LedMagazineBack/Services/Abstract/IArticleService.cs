@@ -1,6 +1,7 @@
 using LedMagazineBack.Entities;
+using LedMagazineBack.Models;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.Abstract;
 
 public interface IArticleService
 {
@@ -9,5 +10,7 @@ public interface IArticleService
     public Task<List<Article>> GetByTitle(string title);
     public Task<List<Article>> GetByWord(string word);
     public Task<Article> Delete(Guid id);
-    public Task<Article> Update(Guid sessionId);
+    public Task<Article> Update(Guid id, UpdateArticleModel model);
+    public Task<Article> UpdateImage(Guid id, UpdateArticleImageModel model);
+    public Task<Article> UpdateVideo(Guid id, UpdateArticleVideoModel model);
 }

@@ -7,6 +7,6 @@ public class RentTime
     public byte RentMonths { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime EndOfRentDate { get; set; }
-    public Guid ProductId { get; set; }
-    public Guid OrderId { get; set; }
+    public Guid? CartItemId { get; set; }
+    public Guid? OrderItemId { get; set; }
 }

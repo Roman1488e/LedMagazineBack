@@ -64,4 +64,13 @@ public class RentTimeMultiplayerRepository(MagazineDbContext context) : IRentTim
             throw new Exception("Rent time multiplayer not found");
         return renttimeMult; 
     }
+
+    public async Task<RentTimeMultiplayer> GetByProductId(Guid productId)
+    {
+        var renttimeMult = await _context.RentTimesMultiplayer
+            .SingleOrDefaultAsync(x => x.ProductId == productId);
+        if (renttimeMult is null)
+            throw new Exception("Rent time multiplayer not found");
+        return renttimeMult;
+    }
 }

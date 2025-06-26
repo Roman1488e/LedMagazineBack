@@ -35,8 +35,8 @@ public class OrderRepository(MagazineDbContext context) : IOrderRepository
 
     public async Task<Order> GetById(Guid id)
     {
-        var entity = await _context.Orders.Include(x=>x.Products)
-            .Include(x=>x.RentTimes)
+        var entity = await _context.Orders
+            .Include(x=>x.Items)
             .SingleOrDefaultAsync(x => x.Id == id);
         if (entity == null)
             throw new Exception($"Order not found");
@@ -45,50 +45,81 @@ public class OrderRepository(MagazineDbContext context) : IOrderRepository
 
     public async Task<List<Order>> GetActive()
     {
-        var orders = await _context.Orders.AsNoTracking().Include(x => x.Products)
-            .Include(x=> x.RentTimes).Where(x=> x.IsActive).ToListAsync();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> x.IsActive).ToListAsync();
         return orders;
     }
 
     public async Task<List<Order>> GetAll()
     {
-        var orders = await _context.Orders.AsNoTracking().Include(x => x.Products)
-            .Include(x=> x.RentTimes).ToListAsync();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .ToListAsync();
+        return orders;
+    }
+
+    public async Task<List<Order>> GetPrimary()
+    {
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> x.IsPrimary).ToListAsync();
         return orders;
     }
 
     public async Task<List<Order>> GetByOrgName(string orgName)
     {
-        throw new NotImplementedException();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> x.OrganisationName.Contains(orgName)).ToListAsync();
+        return orders;
     }
 
     public async Task<List<Order>> GetFiltered(DateTime? startDate, DateTime? endDate, decimal minPrice, decimal maxPrice)
     {
-        throw new NotImplementedException();
+        var query = _context.Orders
+            .AsNoTracking()
+            .Include(x => x.Items)
+            .AsQueryable();
+        
+        if (startDate.HasValue)
+            query = query.Where(x => x.Created >= startDate.Value);
+
+        if (endDate.HasValue)
+            query = query.Where(x => x.Created <= endDate.Value);
+        
+        query = query.Where(x => x.TotalPrice >= minPrice && x.TotalPrice <= maxPrice);
+
+        return await query.ToListAsync();
     }
 
-    public async Task<List<Order>> GetByProductId(Guid productId)
-    {
-        throw new NotImplementedException();
-    }
+
+    
 
     public async Task<List<Order>> GetByUserId(Guid userId)
     {
-        throw new NotImplementedException();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> x.CustomerId == userId || x.SessionId == userId).ToListAsync();
+        return orders;
     }
 
     public async Task<List<Order>> GetNotAccepted()
     {
-        throw new NotImplementedException();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> !x.IsAccepted).ToListAsync();
+        return orders;
     }
 
     public async Task<List<Order>> GetAccepted()
     {
-        throw new NotImplementedException();
+        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+            .Where(x=> x.IsAccepted).ToListAsync();
+        return orders;
     }
 
     public async Task<List<Order>> GetByProductName(string productName)
     {
-        throw new NotImplementedException();
+        return await _context.Orders
+            .AsNoTracking()
+            .Include(x => x.Items)
+            .Where(order => order.Items.Any(item => item.ProductName == productName))
+            .ToListAsync();
     }
+
 }

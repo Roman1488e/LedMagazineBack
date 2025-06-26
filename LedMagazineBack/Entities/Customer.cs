@@ -6,6 +6,8 @@ public class Customer
     public string Username { get; set; }
     public string? ContactNumber { get; set; }
     public string PasswordHash { get; set; }
+    public string OrganisationName { get; set; }
+    public bool IsVerified { get; set; }
     public string Name { get; set; }
     public string Role { get; set; }
     public List<Order> Orders { get; set; }

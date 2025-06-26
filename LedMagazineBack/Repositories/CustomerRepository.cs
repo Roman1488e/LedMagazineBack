@@ -56,6 +56,23 @@ public class CustomerRepository(MagazineDbContext context) : ICustomerRepository
             .Where(x=> x.Role == role).ToListAsync();
         return customers;
     }
+    
+
+    public async Task<List<Customer>> GetVerified()
+    {
+        var customers = await _context.Customers.AsNoTracking()
+            .Include(x=> x.Orders).Include(x=> x.Cart)
+            .Where(x => x.IsVerified).ToListAsync();
+        return customers;
+    }
+
+    public async Task<List<Customer>> GetByOrgName(string orgName)
+    {
+        var customers = await _context.Customers.AsNoTracking()
+            .Include(x=> x.Orders).Include(x=> x.Cart)
+            .Where(x=> x.OrganisationName == orgName).ToListAsync();
+        return customers;
+    }
 
     public async Task<Customer> GetAllByUsername(string userName)
     {

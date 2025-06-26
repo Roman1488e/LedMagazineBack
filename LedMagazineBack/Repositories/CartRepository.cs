@@ -58,6 +58,15 @@ public class CartRepository(MagazineDbContext context) : ICartRepository
         return cart;
     }
 
+    public async Task<Cart> GetBySessionId(Guid sessionId)
+    {
+        var cart = await _context.Carts
+            .Include(x=> x.Items).SingleOrDefaultAsync(x => x.SessionId == sessionId);
+        if (cart is null)
+            throw new Exception("Cart not found");
+        return cart;
+    }
+
     public async Task<List<Cart>> GetByDate(DateTime startDate, DateTime endDate)
     {
         var carts = await _context.Carts.AsNoTracking()
