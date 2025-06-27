@@ -1,13 +1,17 @@
+using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
+using LedMagazineBack.Helpers;
 using LedMagazineBack.Models;
 using LedMagazineBack.Repositories.Abstract;
 using LedMagazineBack.Services.Abstract;
 
 namespace LedMagazineBack.Services;
 
-public class CartItemService(IUnitOfWork unitOfWork) : ICartItemService
+public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, RolesConstants rolesConstants) : ICartItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly UserHelper  _userHelper = userHelper;
+    private readonly RolesConstants  _rolesConstants = rolesConstants;
 
     public async Task<List<CartItem>> GetAll()
     {
@@ -29,20 +33,39 @@ public class CartItemService(IUnitOfWork unitOfWork) : ICartItemService
 
     public async Task<CartItem> Create(CreateCartItemModel model)
     {
+        var role = _userHelper.GetRole();
+        Cart? cart = new();
         var product = await _unitOfWork.ProductRepository.GetById(model.ProductId);
-        var rentTime = new RentTime()
+        if(role == _rolesConstants.Guest)
+            cart = await _unitOfWork.CartRepository.GetBySessionId(_userHelper.GetUserId());
+        if (role == _rolesConstants.Admin || role == _rolesConstants.Customer)
+            cart = await _unitOfWork.CartRepository.GetByCustomerId(_userHelper.GetUserId());
+        if(cart is null)
+            throw new Exception("Cart not found");
+        var cartItem = new CartItem
+        {
+            ProductId = model.ProductId,
+            ProductName = product.Name,
+            ImageUrl = product.ImageUrl,
+            CartId = cart.Id,
+            Price = product.BasePrice * (decimal)product
+                .RentTimeMultiplayer.MonthsDifferenceMultiplayer + (decimal)product.RentTimeMultiplayer.SecondsDifferenceMultiplayer * product.BasePrice
+        };
+        var createdItem = await _unitOfWork.CartItemRepository.Create(cartItem);
+        cart.TotalPrice += createdItem.Price;
+        await _unitOfWork.CartRepository.Update(cart);
+        var rentTime = new RentTime
         {
             CreatedDate = DateTime.UtcNow,
             RentMonths = model.RentMonths,
             RentSeconds = model.RentSeconds,
             EndOfRentDate = DateTime.UtcNow.AddMonths(model.RentMonths),
+            CartItemId = createdItem.Id
         };
-        var cartItem = new CartItem()
-        {
-            ProductName = product.Name,
-            ProductId = model.ProductId,
-            ImageUrl = product.ImageUrl,
-            
-        }
+
+        await _unitOfWork.RentTimeRepository.Create(rentTime);
+
+        return createdItem;
     }
+
 }

@@ -10,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MagazineDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddStaticServices();
+builder.Services.AddStaticRepositories();
 
 var app = builder.Build();
 

@@ -74,12 +74,10 @@ public class CustomerRepository(MagazineDbContext context) : ICustomerRepository
         return customers;
     }
 
-    public async Task<Customer> GetAllByUsername(string userName)
+    public async Task<Customer?> GetByUsername(string userName)
     {
         var customer = await _context.Customers.Include(x=> x.Orders).Include(x=> x.Cart)
             .SingleOrDefaultAsync(x => x.Username == userName);
-        if(customer is null)
-            throw new Exception("Customer not found");
         return customer;
     }
 

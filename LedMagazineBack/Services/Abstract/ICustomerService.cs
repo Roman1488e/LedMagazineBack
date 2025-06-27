@@ -11,7 +11,7 @@ public interface ICustomerService
     public Task<Customer> UpdateGenInfo(Guid id, UpdateClientGenInfModel model);
     public Task<Customer> UpdateContactNumber(Guid id, UpdateContactNumberModel model);
     public Task<Customer> ChangeVerify(Guid id);
-    public Task<Customer> UpdateUsername(Guid id, UpdateLocationModel model);
+    public Task<Customer> UpdateUsername(Guid id, UpdateUsernameModel model);
     public Task<Customer> UpdateRole(Guid id, UpdateRoleModel role);
     public Task<Customer> UpdatePassword(Guid id, UpdatePasswordModel password);
     public Task<Customer> Delete(Guid id);

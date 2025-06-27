@@ -6,5 +6,6 @@ public class RegisterModel
     public string? ContactNumber { get; set; }
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
+    public string OrganisationName { get; set; }
     public string Name { get; set; }
 }

@@ -15,7 +15,8 @@ public class UnitOfWork(
     IOrderRepository orderRepository,
     IProductRepository productRepository,
     IRentTimeMultiplayerRepository rentTimeMultiplayerRepository,
-    IScreenSpecificationRepository screenSpecificationRepository)
+    IScreenSpecificationRepository screenSpecificationRepository,
+    IOrderItemRepository orderItemRepository)
     : IUnitOfWork
 {
     public IArticleRepository ArticleRepository { get; } = articleRepository;
@@ -30,4 +31,5 @@ public class UnitOfWork(
     public IProductRepository ProductRepository { get; } = productRepository;
     public IRentTimeMultiplayerRepository RentTimeMultiplayerRepository { get; } = rentTimeMultiplayerRepository;
     public IScreenSpecificationRepository ScreenSpecificationRepository { get; } = screenSpecificationRepository;
+    public IOrderItemRepository OrderItemRepository { get; } = orderItemRepository;
 }

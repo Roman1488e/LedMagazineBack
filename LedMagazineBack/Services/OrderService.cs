@@ -1,13 +1,17 @@
+using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
+using LedMagazineBack.Helpers;
 using LedMagazineBack.Models;
 using LedMagazineBack.Repositories.Abstract;
 using LedMagazineBack.Services.Abstract;
 
 namespace LedMagazineBack.Services;
 
-public class OrderService(IUnitOfWork unitOfWork) : IOrderService
+public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper) : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly UserHelper  _userHelper = userHelper;
+    private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
     public async Task<List<Order>> GetAll()
     {
@@ -23,13 +27,16 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
 
     public async Task<Order> Create(CreateOrderModel model)
     {
+        var sessionId = _userHelper.GetUserId();
         var order = new Order()
         {
-            Created = DateTime.UtcNow, //customerId
+            Created = DateTime.UtcNow,
             IsAccepted = false,
             IsActive = true,
+            IsPrimary = false,
             OrganisationName = model.OrganisationName,
-            PhoneNumber = model.PhoneNumber
+            PhoneNumber = model.PhoneNumber,
+            SessionId = sessionId,
         };
         var result = await _unitOfWork.OrderRepository.Create(order);
         return result;
@@ -37,7 +44,19 @@ public class OrderService(IUnitOfWork unitOfWork) : IOrderService
 
     public async Task<Order> Create()
     {
-        throw new NotImplementedException();
+        var customer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
+        var order = new Order()
+        {
+            Created = DateTime.UtcNow,
+            IsAccepted = false,
+            IsActive = true,
+            IsPrimary = customer.IsVerified,
+            OrganisationName = customer.OrganisationName,
+            PhoneNumber = customer.ContactNumber,
+            CustomerId = customer.Id,
+        };
+        var result = await _unitOfWork.OrderRepository.Create(order);
+        return result;
     }
 
     public async Task<Order> Accept(Guid id)

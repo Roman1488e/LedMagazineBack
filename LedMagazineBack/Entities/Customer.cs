@@ -4,7 +4,7 @@ public class Customer
 {
     public Guid Id { get; set; }
     public string Username { get; set; }
-    public string? ContactNumber { get; set; }
+    public string ContactNumber { get; set; }
     public string PasswordHash { get; set; }
     public string OrganisationName { get; set; }
     public bool IsVerified { get; set; }

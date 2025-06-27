@@ -49,21 +49,17 @@ public class CartRepository(MagazineDbContext context) : ICartRepository
         return cart;
     }
 
-    public async Task<Cart> GetByCustomerId(Guid customerId)
+    public async Task<Cart?> GetByCustomerId(Guid customerId)
     {
         var cart = await _context.Carts.AsNoTracking()
             .Include(x=> x.Items).SingleOrDefaultAsync(x => x.CustomerId == customerId);
-        if (cart is null)
-            throw new Exception("Cart not found");
         return cart;
     }
 
-    public async Task<Cart> GetBySessionId(Guid sessionId)
+    public async Task<Cart?> GetBySessionId(Guid sessionId)
     {
         var cart = await _context.Carts
             .Include(x=> x.Items).SingleOrDefaultAsync(x => x.SessionId == sessionId);
-        if (cart is null)
-            throw new Exception("Cart not found");
         return cart;
     }
 

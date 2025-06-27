@@ -23,14 +23,31 @@ public class RentTimeService(IUnitOfWork unitOfWork) : IRentTimeService
 
     public async Task<RentTime> Create(CreateRentTimeModel model)
     {
+        var check = 0;
         var rentTime = new RentTime()
         {
             CreatedDate = DateTime.UtcNow,
             RentMonths = model.RentMonths,
             RentSeconds = model.RentSeconds,
         };
-        if(model.CartItemId is not null)
+        if (model.CartItemId is not null)
+        {
             rentTime.CartItemId = model.CartItemId;
+            check++;
+        }
+        if (model.OrderItemId is not null)
+        {
+            rentTime.OrderItemId = model.OrderItemId;
+            check++;
+        }
+        switch (check)
+        {
+            case 0:
+                throw new Exception("No CartItemId or OrderItemId");
+            case 2:
+                throw new Exception("Should be only CartItemId or OrderItemId");
+        }
+
         rentTime.EndOfRentDate = rentTime.CreatedDate.AddMonths(rentTime.RentMonths);
         var result = await _unitOfWork.RentTimeRepository.Create(rentTime);
         return result;

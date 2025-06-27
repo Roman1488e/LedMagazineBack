@@ -14,4 +14,5 @@ public interface IUnitOfWork
     IProductRepository ProductRepository { get; }
     IRentTimeMultiplayerRepository RentTimeMultiplayerRepository { get; }
     IScreenSpecificationRepository ScreenSpecificationRepository { get; }
+    IOrderItemRepository OrderItemRepository { get; }
 }
