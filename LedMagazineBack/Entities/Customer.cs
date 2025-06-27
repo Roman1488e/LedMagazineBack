@@ -10,6 +10,6 @@ public class Customer
     public bool IsVerified { get; set; }
     public string Name { get; set; }
     public string Role { get; set; }
-    public List<Order> Orders { get; set; }
-    public Cart Cart { get; set; }
+    public List<Order>? Orders { get; set; }
+    public Cart? Cart { get; set; }
 }

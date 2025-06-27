@@ -8,13 +8,13 @@ public interface ICustomerService
     public Task<List<Customer>> GetAll();
     public Task<Customer> GetById(Guid id);
     public Task<Customer> GetByUsername(string username);
-    public Task<Customer> UpdateGenInfo(Guid id, UpdateClientGenInfModel model);
-    public Task<Customer> UpdateContactNumber(Guid id, UpdateContactNumberModel model);
+    public Task<Customer> UpdateGenInfo(UpdateClientGenInfModel model);
+    public Task<Customer> UpdateContactNumber(UpdateContactNumberModel model);
     public Task<Customer> ChangeVerify(Guid id);
-    public Task<Customer> UpdateUsername(Guid id, UpdateUsernameModel model);
+    public Task<Customer> UpdateUsername(UpdateUsernameModel model);
     public Task<Customer> UpdateRole(Guid id, UpdateRoleModel role);
-    public Task<Customer> UpdatePassword(Guid id, UpdatePasswordModel password);
-    public Task<Customer> Delete(Guid id);
+    public Task<Customer> UpdatePassword(UpdatePasswordModel password);
+    public Task<Customer> Delete(Guid? id);
     public Task<List<Customer>> GetAllUsers();
     public Task<List<Customer>> GetAllAdmins();
     public Task<string> Login(LoginModel model);

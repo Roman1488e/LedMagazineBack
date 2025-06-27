@@ -39,12 +39,10 @@ public class ScreenSpecificationsRepository(MagazineDbContext context) : IScreen
         return screenSpecifications;
     }
 
-    public async Task<ScreenSpecifications> GetByProductId(Guid productId)
+    public async Task<ScreenSpecifications?> GetByProductId(Guid productId)
     {
         var screenSpecifications = await _context.ScreenSpecifications
             .SingleOrDefaultAsync(x => x.ProductId == productId);
-        if (screenSpecifications is null)
-            throw new Exception("Screen Specification not found");
         return screenSpecifications;
     }
 

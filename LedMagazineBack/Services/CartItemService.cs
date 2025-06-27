@@ -7,11 +7,11 @@ using LedMagazineBack.Services.Abstract;
 
 namespace LedMagazineBack.Services;
 
-public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, RolesConstants rolesConstants) : ICartItemService
+public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly UserHelper  _userHelper = userHelper;
-    private readonly RolesConstants  _rolesConstants = rolesConstants;
+    private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
     public async Task<List<CartItem>> GetAll()
     {

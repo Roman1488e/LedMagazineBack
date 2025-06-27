@@ -13,7 +13,7 @@ public class Order
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderNumber { get; set; }
     public string PhoneNumber { get; set; } 
-    public List<OrderItem> Items { get; set; }
+    public List<OrderItem> Items { get; set; } = [];
     public decimal TotalPrice { get; set; }
     public Guid? CustomerId { get; set; }
     public Guid? SessionId { get; set; }

@@ -36,8 +36,8 @@ public class GuestRepository(MagazineDbContext context) : IGuestRepository
 
     public async Task<List<Guest>> GetAll()
     {
-        var guests = await _context.Guests.Include(x=> x.Cart)
-            .Include(x=> x.Orders).AsNoTracking().ToListAsync();
+        var guests = await _context.Guests.Include(x=> x.Cart).
+            Include(x=> x.Orders).AsNoTracking().ToListAsync();
         return guests;
     }
 

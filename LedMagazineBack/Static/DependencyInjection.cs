@@ -1,3 +1,4 @@
+using LedMagazineBack.Helpers;
 using LedMagazineBack.Repositories;
 using LedMagazineBack.Repositories.Abstract;
 using LedMagazineBack.Services;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IGuestRepository, GuestRepository>();
+        services.AddScoped<IOrderItemRepository, OrderItemRepository>();
         services.AddScoped<IRentTimeMultiplayerRepository, RentTimeMultiplayerRepository>();
         services.AddScoped<IScreenSpecificationRepository, ScreenSpecificationsRepository>();
         services.AddScoped<ILocationRepository, LocationRepository>();
@@ -32,6 +34,7 @@ public static class DependencyInjection
         service.AddScoped<IRentTimeService, RentTimeService>();
         service.AddScoped<IOrderService, OrderService>();
         service.AddScoped<ICustomerService, CustomerService>();
+        service.AddScoped<UserHelper>();
         service.AddScoped<IGuestService, GuestService>();
         service.AddScoped<IRentTimeMultiplayerService, RentTimeMultiplayerService>();
         service.AddScoped<ILocationService, LocationService>();

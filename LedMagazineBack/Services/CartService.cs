@@ -22,9 +22,9 @@ public class CartService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartS
         return cart;
     }
 
-    public async Task<Cart> GetBySessionId(Guid sessionId)
+    public async Task<Cart> GetBySessionId()
     {
-        var cart =  await _unitOfWork.CartRepository.GetBySessionId(sessionId);
+        var cart =  await _unitOfWork.CartRepository.GetBySessionId(_userHelper.GetUserId());
         if(cart is null)
             throw new Exception("Cart not found");
         return cart;
@@ -48,6 +48,8 @@ public class CartService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartS
     public async Task<Cart> DeleteBySessionId(Guid sessionId)
     {
         var cart = await _unitOfWork.CartRepository.GetBySessionId(sessionId);
+        if(cart is null)
+            throw new Exception("Cart not found");
         await _unitOfWork.CartRepository.Delete(cart.Id);
         return cart;
     }

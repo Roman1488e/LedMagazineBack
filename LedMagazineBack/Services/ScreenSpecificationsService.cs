@@ -21,6 +21,23 @@ public class ScreenSpecificationsService(IUnitOfWork unitOfWork) : IScreenSpecif
         return screenSpecifications;
     }
 
+    public async Task<ScreenSpecifications> Create(CreateScreenSpecsModel model)
+    {
+        var product =  await _unitOfWork.ProductRepository.GetById(model.ProductId);
+        var screenSpecifications = await _unitOfWork.ScreenSpecificationRepository.GetByProductId(product.Id);
+        if (screenSpecifications is not null)
+            throw new Exception("Screen specifications already exists");
+        var screenSpecs = new ScreenSpecifications()
+        {
+            ProductId = product.Id,
+            ScreenSize = model.ScreenSize,
+            ScreenResolution = model.ScreenResolution,
+            ScreenType = model.ScreenType
+        };
+        await _unitOfWork.ScreenSpecificationRepository.Create(screenSpecs);
+        return screenSpecs;
+    }
+
     public async Task<ScreenSpecifications> Delete(Guid id)
     {
         var screenSpecifications = await _unitOfWork.ScreenSpecificationRepository.Delete(id);

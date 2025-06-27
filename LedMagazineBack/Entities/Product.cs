@@ -10,10 +10,10 @@ public class Product
     public string? VideoUrl { get; set; }
     public string Duration { get; set; }
     public Location Location { get; set; }
-    public ScreenSpecifications ScreenSpecifications { get; set; }
+    public ScreenSpecifications? ScreenSpecifications { get; set; }
     public DateTime Created { get; set; }
     public bool IsActive { get; set; }
-    public RentTimeMultiplayer RentTimeMultiplayer { get; set; }
+    public RentTimeMultiplayer? RentTimeMultiplayer { get; set; }
     
     
 }

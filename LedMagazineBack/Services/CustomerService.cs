@@ -35,17 +35,17 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         return customer;
     }
 
-    public async Task<Customer> UpdateGenInfo(Guid id, UpdateClientGenInfModel model)
+    public async Task<Customer> UpdateGenInfo(UpdateClientGenInfModel model)
     {
-        var customer = await _unitOfWork.CustomerRepository.GetById(id);
+        var customer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
         customer.Name =  model.Name;
         await _unitOfWork.CustomerRepository.Update(customer);
         return customer;
     }
 
-    public async Task<Customer> UpdateContactNumber(Guid id, UpdateContactNumberModel model)
+    public async Task<Customer> UpdateContactNumber(UpdateContactNumberModel model)
     {
-        var customer = await _unitOfWork.CustomerRepository.GetById(id);
+        var customer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
         if(model.ContactNumber is null)
             return customer;
         customer.ContactNumber = model.ContactNumber;
@@ -63,9 +63,9 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         return customer;
     }
 
-    public async Task<Customer> UpdateUsername(Guid id, UpdateUsernameModel model)
+    public async Task<Customer> UpdateUsername(UpdateUsernameModel model)
     {
-        var exCustomer = await _unitOfWork.CustomerRepository.GetById(id);
+        var exCustomer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
         if (model.Username is null)
             return exCustomer;
         var customer = await _unitOfWork.CustomerRepository.GetByUsername(model.Username);
@@ -89,10 +89,10 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         return exCustomer;
     }
 
-    public async Task<Customer> UpdatePassword(Guid id, UpdatePasswordModel model)
+    public async Task<Customer> UpdatePassword(UpdatePasswordModel model)
     {
-        var exCustomer = await _unitOfWork.CustomerRepository.GetById(id);
-        var oldPasswordHash = new PasswordHasher<Customer>().VerifyHashedPassword(exCustomer, model.OldPassword, exCustomer.PasswordHash);
+        var exCustomer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
+        var oldPasswordHash = new PasswordHasher<Customer>().VerifyHashedPassword(exCustomer, exCustomer.PasswordHash, model.OldPassword);
         if(oldPasswordHash == PasswordVerificationResult.Failed)
             throw new Exception("Invalid old password");
         if(model.NewPassword == model.OldPassword)
@@ -104,9 +104,10 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         return exCustomer;
     }
 
-    public async Task<Customer> Delete(Guid id)
+    public async Task<Customer> Delete(Guid? id)
     {
-        var customer = await _unitOfWork.CustomerRepository.Delete(id);
+        id ??= _userHelper.GetUserId();
+        var customer = await _unitOfWork.CustomerRepository.Delete(id.Value);
         return customer;
     }
 
@@ -138,11 +139,18 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var cart = await _unitOfWork.CartRepository.GetByCustomerId(customer.Id);
         if(cart is null)
             throw new Exception("Cart not found");
-        if (cart.Items.Count == 0)
+        if(cart.Items.Count == 0)
         {
             cart = await _unitOfWork.CartRepository.GetBySessionId(_userHelper.GetUserId());
-            if(cart is null)
+            if (cart is null)
                 throw new Exception("Cart not found");
+            if (cart.Items.Count == 0 && cart.CustomerId is null)
+            {
+                var token1 = _jwtService.GenerateTokenForCustomer(customer);
+                return token1;
+            }
+            cart.CustomerId = customer.Id;
+            cart.SessionId = null;
             await _unitOfWork.CartRepository.Update(cart);
         }
         var token = _jwtService.GenerateTokenForCustomer(customer);
@@ -167,14 +175,11 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
             Role = _rolesConstants.Customer,
             Username = model.Username.ToLower(),
             OrganisationName = model.OrganisationName,
+            ContactNumber = model.ContactNumber,
         };
         customer.PasswordHash = new PasswordHasher<Customer>().HashPassword(customer, model.Password);
-        if(model.ContactNumber is not null)
-            customer.ContactNumber = model.ContactNumber;
         var result = await _unitOfWork.CustomerRepository.Create(customer);
-        if (cart.Items.Count == 0) return result;
         cart.CustomerId = result.Id;
-        cart.SessionId = null;
         await _unitOfWork.CartRepository.Update(cart);
         return result;
     }
