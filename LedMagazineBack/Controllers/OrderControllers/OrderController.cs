@@ -1,9 +1,7 @@
-using LedMagazineBack.Entities;
-using LedMagazineBack.Models;
-using LedMagazineBack.Models.Order;
-using LedMagazineBack.Models.Order.FilterModel;
-using LedMagazineBack.Services.Abstract;
-using LedMagazineBack.Services.OrderServices.Absrtact;
+using LedMagazineBack.Models.OrderModels.CreationModels;
+using LedMagazineBack.Models.OrderModels.FilterModel;
+using LedMagazineBack.Models.OrderModels.UpdateModels;
+using LedMagazineBack.Services.OrderServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

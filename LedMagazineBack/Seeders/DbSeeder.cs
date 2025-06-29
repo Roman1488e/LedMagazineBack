@@ -1,6 +1,6 @@
 using LedMagazineBack.Entities;
-using LedMagazineBack.Repositories.Abstract;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Repositories.CartRepositories.Abstract;
+using LedMagazineBack.Repositories.UserRepositories.Abstract;
 using Microsoft.AspNetCore.Identity;
 
 namespace LedMagazineBack.Seeders;

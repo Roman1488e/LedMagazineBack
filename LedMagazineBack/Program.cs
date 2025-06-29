@@ -46,6 +46,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<MagazineDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddStaticRepositories();
+builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<ITelegramService, TelegramService>();
 builder.Services.AddStaticServices();

@@ -1,5 +1,5 @@
 using LedMagazineBack.Entities;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.BlogServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

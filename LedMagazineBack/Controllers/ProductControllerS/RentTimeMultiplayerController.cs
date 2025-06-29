@@ -1,6 +1,8 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Models.RentTimeModels.CreationModels;
+using LedMagazineBack.Models.RentTimeModels.UpdateModels;
+using LedMagazineBack.Services.RentTimeServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

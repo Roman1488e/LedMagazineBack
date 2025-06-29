@@ -1,4 +1,4 @@
-using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.TelegramServices.Abstract;
 
 namespace LedMagazineBack.Services.TelegramServices;

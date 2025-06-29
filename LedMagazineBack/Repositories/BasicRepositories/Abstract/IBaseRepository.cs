@@ -1,0 +1,8 @@
+namespace LedMagazineBack.Repositories.BasicRepositories.Abstract;
+
+public interface IBaseRepository <T>
+{
+    public Task<T> Create(T entity);
+    public Task<T> Update(T entity);
+    public Task<T> Delete(Guid id);
+}

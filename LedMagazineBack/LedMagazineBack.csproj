@@ -23,7 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DTOs\" />
+      <Folder Include="Models\CartModels\UpdateModels\" />
+      <Folder Include="Repositories\Abstract\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 

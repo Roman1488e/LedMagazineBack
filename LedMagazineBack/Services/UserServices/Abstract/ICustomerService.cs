@@ -1,5 +1,8 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
+using LedMagazineBack.Models.ProductModels.UpdateModels;
+using LedMagazineBack.Models.UserModels.Auth;
+using LedMagazineBack.Models.UserModels.UpdateModels;
 
 namespace LedMagazineBack.Services.UserServices.Abstract;
 

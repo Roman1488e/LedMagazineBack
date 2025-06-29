@@ -1,7 +1,9 @@
 using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Models.ProductModels.UpdateModels;
+using LedMagazineBack.Models.UserModels.Auth;
+using LedMagazineBack.Models.UserModels.UpdateModels;
 using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

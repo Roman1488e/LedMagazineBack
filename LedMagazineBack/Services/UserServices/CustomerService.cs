@@ -2,33 +2,61 @@ using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Models;
-using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Models.ProductModels.UpdateModels;
+using LedMagazineBack.Models.UserModels.Auth;
+using LedMagazineBack.Models.UserModels.UpdateModels;
+using LedMagazineBack.Repositories.BasicRepositories.Abstract;
+using LedMagazineBack.Services.MemoryServices.Abstract;
 using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Identity;
 
 namespace LedMagazineBack.Services.UserServices;
 
-public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, UserHelper userHelper) : ICustomerService
+public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, UserHelper userHelper, IMemoryCacheService cache) : ICustomerService
 {
     private readonly IJwtService _jwtService = jwtService;
     private readonly UserHelper _userHelper = userHelper;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMemoryCacheService _cache = cache;
+    private const string Key = "customers";
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
     public async Task<List<Customer>> GetAll()
     {
+        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
+        if (cachedCustomers is not null && cachedCustomers.Count != 0)
+            return cachedCustomers;
+        await Set();
         var customers = await _unitOfWork.CustomerRepository.GetAll();
         return customers;
     }
 
     public async Task<Customer> GetById(Guid id)
     {
+        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
+        if (cachedCustomers is not null && cachedCustomers.Count != 0)
+        {
+            var cachedCustomer = cachedCustomers.SingleOrDefault(x => x.Id == id);
+            if (cachedCustomer is null)
+                throw new Exception("Customer not found");
+            return cachedCustomer;
+        }
+        await Set();
         var customer = await _unitOfWork.CustomerRepository.GetById(id);
         return customer;
     }
 
     public async Task<Customer> GetByUsername(string username)
     {
+        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
+        if (cachedCustomers is not null  && cachedCustomers.Count != 0)
+        {
+            var cachedCustomer = cachedCustomers.SingleOrDefault(x => x.Username == username);
+            if (cachedCustomer is null)
+                throw new Exception("Customer not found");
+            return cachedCustomer;
+        }
+        await Set();
         var customer = await _unitOfWork.CustomerRepository.GetByUsername(username);
         if(customer == null)
             throw new Exception("Customer not found");
@@ -39,6 +67,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
     {
         var customer = await _unitOfWork.CustomerRepository.GetById(_userHelper.GetUserId());
         customer.Name =  model.Name;
+        await Set();
         await _unitOfWork.CustomerRepository.Update(customer);
         return customer;
     }
@@ -49,6 +78,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         if(model.ContactNumber is null)
             return customer;
         customer.ContactNumber = model.ContactNumber;
+        await Set();
         await _unitOfWork.CustomerRepository.Update(customer);
         return customer;
     }
@@ -59,6 +89,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         if(customer.IsVerified)
             customer.IsVerified = false;
         customer.IsVerified = true;
+        await Set();
         await _unitOfWork.CustomerRepository.Update(customer);
         return customer;
     }
@@ -72,6 +103,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         if(customer is not null)
             throw new Exception("Username already exists");
         exCustomer.Username = model.Username;
+        await Set();
         await _unitOfWork.CustomerRepository.Update(exCustomer);
         return exCustomer;
     }
@@ -85,6 +117,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         if(role != _rolesConstants.Admin && role != _rolesConstants.Guest && role != _rolesConstants.Customer)
             throw new Exception("Invalid role");
         exCustomer.Role = role;
+        await Set();
         await _unitOfWork.CustomerRepository.Update(exCustomer);
         return exCustomer;
     }
@@ -101,24 +134,40 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
             throw new Exception("Invalid confirm password");
         exCustomer.PasswordHash = new PasswordHasher<Customer>().HashPassword(exCustomer, model.NewPassword);
         await _unitOfWork.CustomerRepository.Update(exCustomer);
+        await Set();
         return exCustomer;
     }
 
     public async Task<Customer> Delete(Guid? id)
     {
         id ??= _userHelper.GetUserId();
+        await Set();
         var customer = await _unitOfWork.CustomerRepository.Delete(id.Value);
         return customer;
     }
 
     public async Task<List<Customer>> GetAllUsers()
     {
+        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
+        if (cachedCustomers is not null && cachedCustomers.Count != 0)
+        {
+            var cachedCustomer = cachedCustomers.Where(x=> x.Role == _rolesConstants.Customer).ToList();
+            return cachedCustomer;
+        }
+        await Set();
         var customers = await _unitOfWork.CustomerRepository.GetAllByRole(_rolesConstants.Customer);
         return customers;
     }
 
     public async Task<List<Customer>> GetAllAdmins()
     {
+        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
+        if (cachedCustomers is not null && cachedCustomers.Count != 0)
+        {
+            var cachedCustomer = cachedCustomers.Where(x=> x.Role == _rolesConstants.Admin).ToList();
+            return cachedCustomer;
+        }
+        await Set();
         var customers = await _unitOfWork.CustomerRepository.GetAllByRole(_rolesConstants.Admin);
         return customers;
     }
@@ -181,6 +230,14 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var result = await _unitOfWork.CustomerRepository.Create(customer);
         cart.CustomerId = result.Id;
         await _unitOfWork.CartRepository.Update(cart);
+        await Set();
         return result;
     }
+    
+    private async Task Set()
+    {
+        var customers = await _unitOfWork.CustomerRepository.GetAll();
+        _cache.SetCache(Key,customers);
+    }
+    
 }

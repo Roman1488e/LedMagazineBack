@@ -1,12 +1,13 @@
 using LedMagazineBack.Models;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Models.ProductModels.CreationModels;
+using LedMagazineBack.Models.ProductModels.UpdateModels;
+using LedMagazineBack.Services.ProductServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.ProductControllerS;
 
 [ApiController]
-[Route("api/[controller]")]
 public class ProductController(IProductService productService) : Controller
 {
     private readonly IProductService _productService = productService;

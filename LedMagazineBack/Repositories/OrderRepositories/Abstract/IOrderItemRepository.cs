@@ -1,5 +1,5 @@
 using LedMagazineBack.Entities;
-using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 
 namespace LedMagazineBack.Repositories.OrderRepositories.Abstract;
 

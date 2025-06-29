@@ -1,7 +1,7 @@
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.BlogModels.CreationModels;
 using LedMagazineBack.Models.BlogModels.UpdateModels;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.BlogServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

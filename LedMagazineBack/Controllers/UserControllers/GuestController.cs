@@ -1,7 +1,8 @@
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.MemoryServices.Abstract;
 using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LedMagazineBack.Controllers.UserControllers;
 
