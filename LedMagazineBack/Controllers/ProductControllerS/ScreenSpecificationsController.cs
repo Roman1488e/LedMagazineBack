@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.ProductControllerS;
 
+[ApiController]
 public class ScreenSpecificationsController(IScreenSpecificationsService screenSpecificationsService) : Controller
 {
     private readonly IScreenSpecificationsService _screenSpecificationsService = screenSpecificationsService;
@@ -33,7 +34,7 @@ public class ScreenSpecificationsController(IScreenSpecificationsService screenS
         }
     }
 
-    [HttpPost("api/screen-specifications/by-product-id/{productId}")]
+    [HttpGet("api/screen-specifications/by-product-id/{productId}")]
     [Authorize]
     public async Task<IActionResult> GetByProductId(Guid productId)
     {
@@ -48,7 +49,7 @@ public class ScreenSpecificationsController(IScreenSpecificationsService screenS
         }
     }
 
-    [HttpPost("api/screen-specifications/create")]
+    [HttpPost("api/screen-specifications")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> Create([FromBody] CreateScreenSpecsModel screenSpecifications)
     {
@@ -63,9 +64,9 @@ public class ScreenSpecificationsController(IScreenSpecificationsService screenS
         }
     }
 
-    [HttpPut("api/screen-specifications/{id}/update")]
+    [HttpPut("api/screen-specifications/{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> Update(Guid id, UpdateScreenSpecsModel model)
+    public async Task<IActionResult> Update(Guid id,[FromBody] UpdateScreenSpecsModel model)
     {
         try
         {

@@ -1,9 +1,9 @@
 using LedMagazineBack.Context;
 using LedMagazineBack.Entities;
-using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Repositories.OrderRepositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 
-namespace LedMagazineBack.Repositories;
+namespace LedMagazineBack.Repositories.OrderRepositories;
 
 public class OrderItemRepository(MagazineDbContext context) : IOrderItemRepository
 {

@@ -47,7 +47,6 @@ namespace LedMagazineBack.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("VideoUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -561,11 +560,9 @@ namespace LedMagazineBack.Migrations
                     b.Navigation("Location")
                         .IsRequired();
 
-                    b.Navigation("RentTimeMultiplayer")
-                        .IsRequired();
+                    b.Navigation("RentTimeMultiplayer");
 
-                    b.Navigation("ScreenSpecifications")
-                        .IsRequired();
+                    b.Navigation("ScreenSpecifications");
                 });
 #pragma warning restore 612, 618
         }

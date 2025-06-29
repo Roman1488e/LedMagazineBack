@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.CartControllers;
 
+[ApiController]
 public class CartController(ICartService cartService) : Controller
 {
     private readonly ICartService  _cartService = cartService;

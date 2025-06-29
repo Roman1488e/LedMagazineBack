@@ -1,9 +1,11 @@
 using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.UserControllers;
 
+[ApiController]
 public class GuestController(IGuestService guestService) : Controller
 {
     private readonly IGuestService _guestService = guestService;

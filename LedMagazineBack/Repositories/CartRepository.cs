@@ -52,14 +52,14 @@ public class CartRepository(MagazineDbContext context) : ICartRepository
     public async Task<Cart?> GetByCustomerId(Guid customerId)
     {
         var cart = await _context.Carts.AsNoTracking()
-            .Include(x=> x.Items).SingleOrDefaultAsync(x => x.CustomerId == customerId);
+            .Include(x=> x.Items).ThenInclude(x=> x.RentTime).SingleOrDefaultAsync(x => x.CustomerId == customerId);
         return cart;
     }
 
     public async Task<Cart?> GetBySessionId(Guid sessionId)
     {
         var cart = await _context.Carts
-            .Include(x=> x.Items).SingleOrDefaultAsync(x => x.SessionId == sessionId);
+            .Include(x=> x.Items).ThenInclude(x=> x.RentTime).SingleOrDefaultAsync(x => x.SessionId == sessionId);
         return cart;
     }
 

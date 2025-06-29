@@ -2,9 +2,9 @@ using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Repositories.Abstract;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.UserServices.Abstract;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.UserServices;
 
 public class GuestService(IUnitOfWork unitOfWork, IJwtService jwtService, UserHelper userHelper) : IGuestService
 {

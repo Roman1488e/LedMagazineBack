@@ -102,9 +102,7 @@ public class ProductService(IUnitOfWork unitOfWork, IFileService fileService) : 
         var product = await _unitOfWork.ProductRepository.GetById(id);
         if(!_fileService.CheckIsImage(model.Image))
             throw new Exception("Wrong image format");
-        var imageUrl = await _fileService.UploadFile(model.Image);
-        product.ImageUrl = imageUrl;
-        await _unitOfWork.ProductRepository.Update(product);
+        await _fileService.UpdateFile(product.ImageUrl, model.Image);
         return product;
     }
 
@@ -113,6 +111,11 @@ public class ProductService(IUnitOfWork unitOfWork, IFileService fileService) : 
         var product = await _unitOfWork.ProductRepository.GetById(id);
         if(!_fileService.CheckIsVideo(model.Video))
             throw new Exception("Wrong video format");
+        if (product.VideoUrl is not null)
+        {
+            await _fileService.UpdateFile(product.VideoUrl, model.Video);
+            return product;
+        }
         var videoUrl = await _fileService.UploadFile(model.Video);
         product.VideoUrl = videoUrl;
         await _unitOfWork.ProductRepository.Update(product);

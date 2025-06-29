@@ -1,3 +1,5 @@
+using LedMagazineBack.Repositories.OrderRepositories.Abstract;
+
 namespace LedMagazineBack.Repositories.Abstract;
 
 public interface IUnitOfWork

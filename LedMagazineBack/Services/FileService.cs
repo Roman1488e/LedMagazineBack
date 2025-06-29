@@ -37,4 +37,20 @@ public class FileService(IWebHostEnvironment env, IHttpContextAccessor httpConte
 
         return $"{baseUrl}/uploads/{fileName}";
     }
+
+    public async Task UpdateFile(string absoluteUrl, IFormFile newFile)
+    {
+        var request = httpContextAccessor.HttpContext!.Request;
+        var baseUrl = $"{request.Scheme}://{request.Host}"; 
+        if (!absoluteUrl.StartsWith(baseUrl))
+            throw new ArgumentException("Invalid file URL", nameof(absoluteUrl));
+        var relativePath = absoluteUrl.Substring(baseUrl.Length); 
+        var cleanRelativePath = relativePath.TrimStart('/');
+        var fullPath = Path.Combine(env.WebRootPath, cleanRelativePath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+        if (!System.IO.File.Exists(fullPath))
+            throw new FileNotFoundException("Старый файл не найден", fullPath);
+        System.IO.File.Delete(fullPath);
+        await using var stream = new FileStream(fullPath, FileMode.Create);
+        await newFile.CopyToAsync(stream);
+    }
 }

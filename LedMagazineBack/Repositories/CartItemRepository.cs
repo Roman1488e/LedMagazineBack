@@ -47,6 +47,13 @@ public class CartItemRepository(MagazineDbContext context) : ICartItemRepository
         return cartItems;
     }
 
+    public async Task<List<CartItem>> DeleteRange(List<CartItem> entities)
+    {
+        _context.CartItems.RemoveRange(entities);
+        await _context.SaveChangesAsync();
+        return entities;
+    }
+
     public async Task<List<CartItem>> GetAll()
     {
         var cartItems = await _context.CartItems.AsNoTracking().ToListAsync();

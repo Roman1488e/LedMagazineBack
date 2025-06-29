@@ -28,6 +28,12 @@ public class RentTimeMultiplayerService(IUnitOfWork unitOfWork) : IRentTimeMulti
         return result;
     }
 
+    public async Task<RentTimeMultiplayer> Delete(Guid id)
+    {
+        var result = await _unitOfWork.RentTimeMultiplayerRepository.Delete(id);
+        return result;
+    }
+
     public async Task<RentTimeMultiplayer> Update(Guid id, UpdateRentTimeMultModel model)
     {
         var existingRentTimeMult = await _unitOfWork.RentTimeMultiplayerRepository.GetById(id);

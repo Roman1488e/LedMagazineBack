@@ -21,6 +21,24 @@ public class RentTimeService(IUnitOfWork unitOfWork) : IRentTimeService
         return rentTime;
     }
 
+    public async Task<RentTime> GetByCartItemId(Guid id)
+    {
+        var  rentTime = await _unitOfWork.RentTimeRepository.GetByCartItemId(id);
+        return rentTime;
+    }
+
+    public async Task<RentTime> Delete(Guid id)
+    {
+        var result = await _unitOfWork.RentTimeRepository.Delete(id);
+        return result;
+    }
+
+    public async Task<RentTime> GetByOrderItemId(Guid id)
+    {
+        var rentTime = await _unitOfWork.RentTimeRepository.GetByOrderItemId(id);
+        return rentTime;
+    }
+
     public async Task<RentTime> Create(CreateRentTimeModel model)
     {
         var check = 0;

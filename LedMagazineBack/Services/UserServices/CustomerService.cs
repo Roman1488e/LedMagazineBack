@@ -3,10 +3,10 @@ using LedMagazineBack.Entities;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Models;
 using LedMagazineBack.Repositories.Abstract;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Identity;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.UserServices;
 
 public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, UserHelper userHelper) : ICustomerService
 {

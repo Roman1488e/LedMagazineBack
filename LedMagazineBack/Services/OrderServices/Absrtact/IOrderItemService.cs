@@ -1,7 +1,7 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models.Order;
 
-namespace LedMagazineBack.Services.Abstract;
+namespace LedMagazineBack.Services.OrderServices.Absrtact;
 
 public interface IOrderItemService
 {

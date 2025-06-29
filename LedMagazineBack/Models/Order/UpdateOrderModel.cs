@@ -1,4 +1,4 @@
-namespace LedMagazineBack.Models;
+namespace LedMagazineBack.Models.Order;
 
 public class UpdateOrderModel
 {

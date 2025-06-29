@@ -25,8 +25,7 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
 
     public async Task<Product> Delete(Guid id)
     {
-        var product = await _context.Products.Include(x=> x.Location)
-            .Include(x=> x.ScreenSpecifications).SingleOrDefaultAsync(x=> x.Id == id);
+        var product = await _context.Products.SingleOrDefaultAsync(x=> x.Id == id);
         if(product is null)
             throw new Exception("Product not found");
         _context.Products.Remove(product);
@@ -36,14 +35,14 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
 
     public async Task<List<Product>> GetAll()
     {
-        var products = await _context.Products.AsNoTracking().Include(x=> x.Location)
+        var products = await _context.Products.AsNoTracking().Include(x=> x.Location).Include(x=> x.RentTimeMultiplayer)
             .Include(x=> x.ScreenSpecifications).ToListAsync();
         return products;
     }
 
     public async Task<Product> GetById(Guid id)
     {
-        var product = await _context.Products.Include(x=> x.Location)
+        var product = await _context.Products.Include(x=> x.Location).Include(X=>X.RentTimeMultiplayer)
             .Include(x=> x.ScreenSpecifications).SingleOrDefaultAsync(x => x.Id == id);
         if(product is null)
             throw new Exception("Product not found");
@@ -52,7 +51,7 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
 
     public async Task<List<Product>> GetActive()
     {
-        var products = await _context.Products.AsNoTracking().Include(x=> x.Location)
+        var products = await _context.Products.AsNoTracking().Include(x=> x.Location).Include(x=> x.RentTimeMultiplayer)
             .Include(x=> x.ScreenSpecifications).ToListAsync();
         return products;
     }
@@ -70,6 +69,7 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
             .AsNoTracking()
             .Include(x => x.Location)
             .Include(x => x.ScreenSpecifications)
+            .Include(x=> x.RentTimeMultiplayer)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(districts))

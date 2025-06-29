@@ -2,11 +2,13 @@ using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.UserControllers;
 
+[ApiController]
 public class CustomerController(ICustomerService customerService, IGuestService guestService) : Controller
 {
     private readonly ICustomerService _customerService = customerService;

@@ -1,6 +1,7 @@
 using LedMagazineBack.Entities;
+using LedMagazineBack.Repositories.Abstract;
 
-namespace LedMagazineBack.Repositories.Abstract;
+namespace LedMagazineBack.Repositories.OrderRepositories.Abstract;
 
 public interface IOrderItemRepository : IBaseRepository<OrderItem>
 {

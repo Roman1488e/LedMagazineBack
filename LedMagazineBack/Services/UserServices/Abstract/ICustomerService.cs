@@ -1,7 +1,7 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 
-namespace LedMagazineBack.Services.Abstract;
+namespace LedMagazineBack.Services.UserServices.Abstract;
 
 public interface ICustomerService
 {

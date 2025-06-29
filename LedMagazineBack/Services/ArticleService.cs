@@ -1,5 +1,7 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
+using LedMagazineBack.Models.BlogModels.CreationModels;
+using LedMagazineBack.Models.BlogModels.UpdateModels;
 using LedMagazineBack.Repositories.Abstract;
 using LedMagazineBack.Services.Abstract;
 
@@ -14,6 +16,22 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
     {
         var article = await _unitOfWork.ArticleRepository.GetById(id);
         return article;
+    }
+
+    public async Task<Article> Create(CreateArticleModel model)
+    {
+        var article = new Article
+        {
+            Created = DateTime.UtcNow,
+            Title = model.Title,
+            Content = model.Content,
+            BlogId = model.BlogId,
+            ImageUrl = await _fileService.UploadFile(model.Image)
+        };
+        if(model.Video != null)
+            article.VideoUrl = await _fileService.UploadFile(model.Video);
+        var result = await _unitOfWork.ArticleRepository.Create(article);
+        return result;
     }
 
     public async Task<List<Article>> GetAll()
@@ -66,9 +84,7 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         var exArticle = await _unitOfWork.ArticleRepository.GetById(id);
         if(!_fileService.CheckIsImage(model.Image))
             throw new InvalidOperationException("Неверный формат файла. Ожидается изображение.");
-        var filePath = await _fileService.UploadFile(model.Image);
-        exArticle.ImageUrl = filePath;
-        await _unitOfWork.ArticleRepository.Update(exArticle);
+        await _fileService.UpdateFile(exArticle.ImageUrl , model.Image);
         return exArticle;
     }
 
@@ -78,6 +94,11 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         var exArticle = await _unitOfWork.ArticleRepository.GetById(id);
         if(!_fileService.CheckIsVideo(model.Video))
             throw new InvalidOperationException("Неверный формат файла. Ожидается видео.");
+        if (exArticle.VideoUrl is not null)
+        {
+            await _fileService.UpdateFile(exArticle.VideoUrl, model.Video);
+            return exArticle;
+        }
         var filePath = await _fileService.UploadFile(model.Video);
         exArticle.VideoUrl = filePath;
         await _unitOfWork.ArticleRepository.Update(exArticle);

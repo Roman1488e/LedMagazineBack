@@ -1,9 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using LedMagazineBack.Entities;
-using Microsoft.IdentityModel.Tokens;
 
-namespace LedMagazineBack.Services.Abstract;
+namespace LedMagazineBack.Services.UserServices.Abstract;
 
 public interface IJwtService
 {

@@ -2,10 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Helpers;
-using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LedMagazineBack.Services;
+namespace LedMagazineBack.Services.UserServices;
 
 public class JwtService(IConfiguration configuration) : IJwtService
 {

@@ -1,13 +1,19 @@
 using LedMagazineBack.Context;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Seeders;
+using LedMagazineBack.Services.TelegramServices;
+using LedMagazineBack.Services.TelegramServices.Abstract;
 using LedMagazineBack.Static;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    WebRootPath = "wwwroot"
+});
+
 var connectionString = builder.Configuration.GetConnectionString("MagazineDb");
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,7 +47,9 @@ builder.Services.AddDbContext<MagazineDbContext>(options => options.UseNpgsql(co
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddStaticRepositories();
 builder.Services.AddControllers();
+builder.Services.AddHttpClient<ITelegramService, TelegramService>();
 builder.Services.AddStaticServices();
+builder.WebHost.UseWebRoot("wwwroot"); 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     var jwtParam = builder.

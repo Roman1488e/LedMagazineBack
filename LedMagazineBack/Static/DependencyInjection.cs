@@ -1,9 +1,16 @@
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Repositories;
 using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Repositories.OrderRepositories;
+using LedMagazineBack.Repositories.OrderRepositories.Abstract;
 using LedMagazineBack.Services;
 using LedMagazineBack.Services.Abstract;
 using LedMagazineBack.Services.OrderServices;
+using LedMagazineBack.Services.OrderServices.Absrtact;
+using LedMagazineBack.Services.TelegramServices;
+using LedMagazineBack.Services.TelegramServices.Abstract;
+using LedMagazineBack.Services.UserServices;
+using LedMagazineBack.Services.UserServices.Abstract;
 
 namespace LedMagazineBack.Static;
 
@@ -40,6 +47,7 @@ public static class DependencyInjection
         service.AddScoped<ILocationService, LocationService>();
         service.AddScoped<ICartService, CartService>();
         service.AddScoped<ICartItemService, CartItemService>();
+        service.AddScoped<ITelegramService, TelegramService>();
         service.AddScoped<IBlogService, BlogService>();
         service.AddScoped<IArticleService, ArticleService>();
         service.AddScoped<IOrderItemService, OrderItemService>();

@@ -97,6 +97,7 @@ public class ProductController(IProductService productService) : Controller
     
     [HttpPut("api/products/{id}/video")]
     [Authorize(Roles = "admin")]
+    [DisableRequestSizeLimit]
     public async Task<IActionResult> UpdateVideo(Guid id, [FromForm] UpdateProductVideoModel model)
     {
         try

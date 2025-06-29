@@ -1,6 +1,6 @@
 using LedMagazineBack.Entities;
 
-namespace LedMagazineBack.Services.Abstract;
+namespace LedMagazineBack.Services.UserServices.Abstract;
 
 public interface IGuestService
 {

@@ -1,19 +1,23 @@
 using LedMagazineBack.Entities;
+using LedMagazineBack.Models.Order;
 using LedMagazineBack.Repositories.Abstract;
+using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.OrderServices.Absrtact;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.OrderControllers;
 
-public class OrderItemController(IOrderItemRepository orderItemRepository) : Controller
+[ApiController]
+public class OrderItemController(IOrderItemService orderItemService) : Controller
 {
-    private readonly IOrderItemRepository _orderItemRepository = orderItemRepository;
+    private readonly IOrderItemService _orderItemService = orderItemService;
 
     [HttpGet("api/orderitem")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetAll()
     {
-        var orderItems = await _orderItemRepository.GetAll();
+        var orderItems = await _orderItemService.GetAll();
         return Ok(orderItems);
     }
 
@@ -23,7 +27,7 @@ public class OrderItemController(IOrderItemRepository orderItemRepository) : Con
     {
         try
         {
-            var result = await _orderItemRepository.GetById(id);
+            var result = await _orderItemService.GetById(id);
             return Ok(result);
         }
         catch (Exception e)
@@ -38,7 +42,7 @@ public class OrderItemController(IOrderItemRepository orderItemRepository) : Con
     {
         try
         {
-            var result = await _orderItemRepository.GetByOrderId(id);
+            var result = await _orderItemService.GetByOrderId(id);
             return Ok(result);
         }
         catch (Exception e)
@@ -51,7 +55,7 @@ public class OrderItemController(IOrderItemRepository orderItemRepository) : Con
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetByName(string name)
     {
-        var result = await _orderItemRepository.GetByProductName(name);
+        var result = await _orderItemService.GetByProductName(name);
         return Ok(result);
     }
 
@@ -61,12 +65,27 @@ public class OrderItemController(IOrderItemRepository orderItemRepository) : Con
     {
         try
         {
-            var result = await _orderItemRepository.Delete(id);
+            var result = await _orderItemService.Delete(id);
             return Ok(result);
         }
         catch (Exception e)
         {
             return NotFound(e.Message);
+        }
+    }
+
+    [HttpPost("api/orderitem")]
+    [Authorize]
+    public async Task<IActionResult> Create(CreateOrderItemModel model)
+    {
+        try
+        {
+            var result = await _orderItemService.Create(model);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }

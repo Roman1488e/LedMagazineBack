@@ -1,21 +1,55 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
+using LedMagazineBack.Models.Order;
+using LedMagazineBack.Models.Order.FilterModel;
 using LedMagazineBack.Services.Abstract;
+using LedMagazineBack.Services.OrderServices.Absrtact;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LedMagazineBack.Controllers.OrderControllers;
 
+[ApiController]
 public class OrderController(IOrderService orderService) : Controller
 {
     private readonly IOrderService _orderService = orderService;
     
     [HttpGet("api/orders")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery]FilterOrdersModel  filterOrdersModel)
     {
-        var result = await _orderService.GetAll();
+        var result = await _orderService.GetAll(filterOrdersModel);
         return Ok(result);
+    }
+
+    [HttpPost("api/orders/from-cart-users")]
+    [Authorize(Roles = "admin, customer")]
+    public async Task<IActionResult> CreateOrderFromCart()
+    {
+        try
+        {
+            var result = await _orderService.CreateFromCart();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPost("api/orders/from-cart-guests")]
+    [Authorize(Roles = "guest")]
+    public async Task<IActionResult> CreateOrderFromCart([FromBody]CreateOrderModel model)
+    {
+        try
+        {
+            var result = await _orderService.CreateFromCart(model);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("api/orders/{id}")]
@@ -33,13 +67,28 @@ public class OrderController(IOrderService orderService) : Controller
         }
     }
 
-    [HttpPost("api/orders")]
-    [Authorize]
+    [HttpPost("api/orders/for-guests")]
+    [Authorize(Roles = "guest")]
     public async Task<IActionResult> Create([FromBody] CreateOrderModel order)
     {
         try
         {
             var result = await _orderService.Create(order);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPost("api/orders/for-users")]
+    [Authorize(Roles = "customer, admin")]
+    public async Task<IActionResult> Create()
+    {
+        try
+        {
+            var result = await _orderService.Create();
             return Ok(result);
         }
         catch (Exception e)
