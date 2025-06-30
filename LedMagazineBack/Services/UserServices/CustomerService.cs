@@ -17,6 +17,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
 {
     private readonly IJwtService _jwtService = jwtService;
     private readonly UserHelper _userHelper = userHelper;
+    private const string CartKey = "Cart";
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMemoryCacheService _cache = cache;
     private const string Key = "customers";
@@ -186,6 +187,9 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
             cart.SessionId = null;
             await _unitOfWork.CartRepository.Update(cart);
         }
+
+        await Set();
+        await SetCarts();
         var token = _jwtService.GenerateTokenForCustomer(customer);
         return token;
 
@@ -199,8 +203,6 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var exCustomer = await _unitOfWork.CustomerRepository.GetByUsername(model.Username);
         if(exCustomer is not null)
             throw new Exception("Username already exists");
-        if(model.Password != model.ConfirmPassword)
-            throw new Exception("Password doesn't match");
         var customer = new Customer()
         {
             IsVerified = false,
@@ -214,6 +216,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var result = await _unitOfWork.CustomerRepository.Create(customer);
         cart.CustomerId = result.Id;
         await _unitOfWork.CartRepository.Update(cart);
+        await SetCarts();
         await Set();
         return result;
     }
@@ -222,6 +225,12 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
     {
         var customers = await _unitOfWork.CustomerRepository.GetAll();
         _cache.SetCache(Key,customers);
+    }
+    
+    private async Task SetCarts()
+    {
+        var carts = await _unitOfWork.CartRepository.GetAll();
+        _cache.SetCache(CartKey,carts);
     }
     
 }

@@ -2,6 +2,7 @@ using LedMagazineBack.Entities;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.CartServices.Abstract;
+using LedMagazineBack.Services.MemoryServices.Abstract;
 
 namespace LedMagazineBack.Services.CartServices;
 
@@ -9,6 +10,7 @@ public class CartService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartS
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly UserHelper _userHelper = userHelper;
+    private const string Key = "Cart";
     public async Task<List<Cart>> GetAll()
     {
         var carts = await _unitOfWork.CartRepository.GetAll();
@@ -76,4 +78,5 @@ public class CartService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartS
         var result = await _unitOfWork.CartRepository.Create(cart);
         return result;
     }
+    
 }

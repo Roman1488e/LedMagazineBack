@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\4c5f81e8-cd34-4e99-96bd-54cc1799840c.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\4c5f81e8-cd34-4e99-96bd-54cc1799840c.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\5be891c3-85cd-491b-b0ff-ad744a987fa5.mp4",
+      "PackagePath": "staticwebassets\\uploads\\5be891c3-85cd-491b-b0ff-ad744a987fa5.mp4"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\632f956a-02b8-48bf-a0fd-1d75c2fb7701.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\632f956a-02b8-48bf-a0fd-1d75c2fb7701.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\7660b9fd-b992-4cec-9148-568ce7149476.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\7660b9fd-b992-4cec-9148-568ce7149476.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\a7873860-aa42-4ae8-a303-5d97d8a644a5.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\a7873860-aa42-4ae8-a303-5d97d8a644a5.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\aaab3a0c-4596-4e02-b1fc-984842931f50.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\aaab3a0c-4596-4e02-b1fc-984842931f50.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\c9d47a37-7c78-4252-bd68-33653b8cafd1.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\c9d47a37-7c78-4252-bd68-33653b8cafd1.jpeg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LedMagazineBack.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.LedMagazineBack.props",
+      "PackagePath": "build\\LedMagazineBack.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.LedMagazineBack.props",
+      "PackagePath": "buildMultiTargeting\\LedMagazineBack.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.LedMagazineBack.props",
+      "PackagePath": "buildTransitive\\LedMagazineBack.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -11,13 +11,11 @@ using LedMagazineBack.Services.TelegramServices.Abstract;
 
 namespace LedMagazineBack.Services.OrderServices;
 
-public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService, IMemoryCacheService cache) : IOrderService
+public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService) : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ITelegramService _telegramService = telegramService;
     private readonly UserHelper  _userHelper = userHelper;
-    private readonly IMemoryCacheService _cache = cache;
-    private const string Key = "Orders";
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
     public async Task<List<Order>> GetAll(FilterOrdersModel model)
@@ -31,21 +29,11 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
             model.isAccepted, model.isActive,
             model.isPrimary, model.startDate, model.endDate
             , model.minPrice, model.maxPrice, model.page, model.pageSize);
-        await Set();
         return orders;
     }
 
     public async Task<Order> GetById(Guid id)
     {
-        var cached = _cache.GetCache<List<Order>>(Key);
-        if (cached is not null && cached.Count > 0)
-        {
-            var item = cached.SingleOrDefault(x => x.Id == id);
-            if(item is null)
-                throw new Exception($"Order with id {id} was not found");
-            return item;
-        }
-        await Set();
         var order = await _unitOfWork.OrderRepository.GetById(id);
         return order;
     }
@@ -64,7 +52,6 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
             SessionId = sessionId,
         };
         var result = await _unitOfWork.OrderRepository.Create(order);
-        await Set();
         return result;
     }
 
@@ -110,7 +97,6 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         cart.TotalPrice = 0;
         await _unitOfWork.CartRepository.Update(cart);
         await _telegramService.GenerateMessageAsync(createdOrder.Id);
-        await Set();
         return createdOrder;
     }
 
@@ -153,7 +139,6 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         await _telegramService.GenerateMessageAsync(createdOrder.Id);
         cart.TotalPrice = 0;
         await _unitOfWork.CartRepository.Update(cart);
-        await Set();
         return createdOrder;
     }
 
@@ -177,7 +162,6 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
             CustomerId = customer.Id,
         };
         var result = await _unitOfWork.OrderRepository.Create(order);
-        await Set();
         return result;
     }
 
@@ -187,7 +171,6 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         if (!order.IsAccepted)
             order.IsAccepted = true;
         await _unitOfWork.OrderRepository.Update(order);
-        await Set();
         return order;
     }
 
@@ -197,14 +180,12 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         if (!order.IsActive)
             order.IsActive = false;
         await _unitOfWork.OrderRepository.Update(order);
-        await Set();
         return order;
     }
 
     public async Task<Order> Delete(Guid id)
     {
         var order = await _unitOfWork.OrderRepository.Delete(id);
-        await Set();
         return order;
     }
 
@@ -225,13 +206,9 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         }
         if (check)
             await _unitOfWork.OrderRepository.Update(order);
-        await Set();
         return order;
     }
     
-    private async Task Set()
-    {
-        var customers = await _unitOfWork.OrderRepository.GetAll();
-        _cache.SetCache(Key,customers);
-    }
+    
+    
 }

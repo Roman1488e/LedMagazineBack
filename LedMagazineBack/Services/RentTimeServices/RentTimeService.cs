@@ -41,7 +41,7 @@ public class RentTimeService(IUnitOfWork unitOfWork) : IRentTimeService
         return rentTime;
     }
 
-    public async Task<RentTime> Create(CreateRentTimeModel model)
+    /*public async Task<RentTime> Create(CreateRentTimeModel model)
     {
         var check = 0;
         var rentTime = new RentTime()
@@ -71,7 +71,7 @@ public class RentTimeService(IUnitOfWork unitOfWork) : IRentTimeService
         rentTime.EndOfRentDate = rentTime.CreatedDate.AddMonths(rentTime.RentMonths);
         var result = await _unitOfWork.RentTimeRepository.Create(rentTime);
         return result;
-    }
+    }*/
 
     public async Task<RentTime> Update(Guid id, UpdateRentTimeModel model)
     {

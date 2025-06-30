@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Constants;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
@@ -57,6 +58,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPost("api/customers/register")]
     [Authorize(Roles = "guest")]
+    [Validate]
     public async Task<IActionResult> Register([FromBody] RegisterModel customer)
     {
         try
@@ -72,6 +74,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPut("api/customers/change-password")]
     [Authorize(Roles = "admin, customer")]
+    [Validate]
     public async Task<IActionResult> ChangePassword([FromBody]UpdatePasswordModel model)
     {
         try
@@ -87,6 +90,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPut("api/customers/change-number")]
     [Authorize(Roles = "admin, customer")]
+    [Validate]
     public async Task<IActionResult> ChangeNumber(UpdateContactNumberModel model)
     {
         try
@@ -117,6 +121,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPut("api/customers/change-name")]
     [Authorize(Roles = "admin, customer")]
+    [Validate]
     public async Task<IActionResult> ChangeName(UpdateClientGenInfModel model)
     {
         try
@@ -132,6 +137,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPut("api/customers/change-username")]
     [Authorize(Roles = "admin, customer")]
+    [Validate]
     public async Task<IActionResult> ChangeUsername([FromBody] UpdateUsernameModel model)
     {
         try
@@ -147,6 +153,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPut("api/customers/change-role")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> ChangeRole(Guid id, [FromBody]UpdateRoleModel model)
     {
         try
@@ -162,6 +169,7 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpPost("api/customers/login")]
     [Authorize(Roles = "guest")]
+    [Validate]
     public async Task<IActionResult> Login([FromBody] LoginModel customer)
     {
         try

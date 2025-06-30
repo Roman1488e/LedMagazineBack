@@ -1,3 +1,4 @@
+using FluentValidation;
 using LedMagazineBack.Helpers;
 using LedMagazineBack.Repositories;
 using LedMagazineBack.Repositories.BasicRepositories;
@@ -35,6 +36,8 @@ using LedMagazineBack.Services.TelegramServices;
 using LedMagazineBack.Services.TelegramServices.Abstract;
 using LedMagazineBack.Services.UserServices;
 using LedMagazineBack.Services.UserServices.Abstract;
+using LedMagazineBack.Validators.UserValidators;
+using LedMagazineBack.Validators.UserValidators.AuthValidators;
 
 namespace LedMagazineBack.Static;
 
@@ -80,6 +83,8 @@ public static class DependencyInjection
         service.AddScoped<IScreenSpecificationsService, ScreenSpecificationsService>();
         service.AddScoped<IJwtService, JwtService>();
         service.AddScoped<IFileService, FileService>();
+        service.AddValidatorsFromAssemblyContaining<RegisterValidation>();
+
         return service;
     }
 }

@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.RentTimeModels.UpdateModels;
 using LedMagazineBack.Services.RentTimeServices.Abstract;
@@ -21,6 +22,7 @@ public class RentTimeController(IRentTimeService rentTimeService) : Controller
 
     [HttpPut("api/rent-times")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRentTimeModel model)
     {
         try

@@ -5,32 +5,55 @@ using LedMagazineBack.Models;
 using LedMagazineBack.Models.CartModels.CreationModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.CartServices.Abstract;
+using LedMagazineBack.Services.MemoryServices.Abstract;
 using LedMagazineBack.Services.PriceServices.Abstract;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace LedMagazineBack.Services.CartServices;
 
-public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, IPriceService priceService) : ICartItemService
+public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, IPriceService priceService, IMemoryCacheService memoryCacheService) : ICartItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IPriceService _priceService = priceService;
+    private readonly IMemoryCacheService _memoryCacheService = memoryCacheService;
+    private const string Key = "CartItem";
     private readonly UserHelper  _userHelper = userHelper;
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
     public async Task<List<CartItem>> GetAll()
     {
+        var cached = _memoryCacheService.GetCache<List<CartItem>>(Key);
+        if (cached is not null)
+            return cached;
+        await Set();
         var cartItems = await _unitOfWork.CartItemRepository.GetAll();
         return cartItems;
     }
 
     public async Task<CartItem> GetById(Guid id)
     {
+        var cached = _memoryCacheService.GetCache<List<CartItem>>(Key);
+        if (cached is not null)
+        {
+            var item = cached.SingleOrDefault(x => x.Id == id);
+            if(item is null)
+                throw new Exception("cart item not found");
+            return item;
+        }
+        await Set();
         var cartItem = await _unitOfWork.CartItemRepository.GetById(id);
         return cartItem;
     }
 
     public async Task<List<CartItem>> GetByCartId(Guid cartId)
     {
+        var cached = _memoryCacheService.GetCache<List<CartItem>>(Key);
+        if (cached is not null)
+        {
+            var items = cached.Where(x => x.Id == cartId).ToList();
+            return items;
+        }
+        await Set();
         var cartItems = await _unitOfWork.CartItemRepository.GetByCartId(cartId);
         return cartItems;
     }
@@ -66,8 +89,14 @@ public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, IPri
             CartItemId = createdItem.Id
         };
         await _unitOfWork.RentTimeRepository.Create(rentTime);
-
+        await Set();
         return createdItem;
     }
+    
+    private async Task Set()
+    {
+        var cartItems = await _unitOfWork.CartItemRepository.GetAll();
+        _memoryCacheService.SetCache(Key, cartItems);
+    } 
 
 }

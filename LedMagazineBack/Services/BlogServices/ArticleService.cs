@@ -4,16 +4,29 @@ using LedMagazineBack.Models.BlogModels.UpdateModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.BlogServices.Abstract;
 using LedMagazineBack.Services.FileServices.Abstract;
+using LedMagazineBack.Services.MemoryServices.Abstract;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LedMagazineBack.Services.BlogServices;
 
-public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : IArticleService
+public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService, IMemoryCacheService memoryCache) : IArticleService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IFileService _fileService = fileService;
+    private readonly IMemoryCacheService _memoryCache = memoryCache;
+    private const string Key = "Article";
 
     public async Task<Article> GetById(Guid id)
     {
+        var cachedArticle = _memoryCache.GetCache<List<Article>>(Key);
+        if (cachedArticle is not null)
+        {
+            var cache = cachedArticle.SingleOrDefault(x => x.Id == id);
+            if(cache is null)
+                throw new Exception("Article not found");
+            return cache;
+        }
+        await Set();
         var article = await _unitOfWork.ArticleRepository.GetById(id);
         return article;
     }
@@ -31,23 +44,37 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         if(model.Video != null)
             article.VideoUrl = await _fileService.UploadFile(model.Video);
         var result = await _unitOfWork.ArticleRepository.Create(article);
+        await Set();
         return result;
     }
 
     public async Task<List<Article>> GetAll()
     {
+        var cachedArticles = _memoryCache.GetCache<List<Article>>(Key);
+        if (cachedArticles is not null)
+            return cachedArticles;
+        await Set();
         var articles = await _unitOfWork.ArticleRepository.GetAll();
         return articles;
     }
 
     public async Task<List<Article>> GetByTitle(string title)
     {
+        var cachedArticles = _memoryCache.GetCache<List<Article>>(Key);
+        if (cachedArticles is not null)
+        {
+            var cache = cachedArticles.Where(x => x.Title == title)
+                .ToList();
+            return cache;
+        }
+        await Set();
         var articles = await _unitOfWork.ArticleRepository.GetByTitle(title);
         return articles;
     }
 
     public async Task<List<Article>> GetByWord(string word)
     {
+        await Set();
         var articles = await _unitOfWork.ArticleRepository.GetByWord(word);
         return articles;
     }
@@ -55,6 +82,7 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
     public async Task<Article> Delete(Guid id)
     {
         var article = await _unitOfWork.ArticleRepository.Delete(id);
+        await Set();
         return article;
         
     }
@@ -76,6 +104,7 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         }
         if (check)
             await _unitOfWork.ArticleRepository.Update(exArticle);
+        await Set();
         return exArticle;
     }
 
@@ -85,6 +114,7 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         if(!_fileService.CheckIsImage(model.Image))
             throw new InvalidOperationException("Неверный формат файла. Ожидается изображение.");
         await _fileService.UpdateFile(exArticle.ImageUrl , model.Image);
+        await Set();
         return exArticle;
     }
 
@@ -102,7 +132,14 @@ public class ArticleService(IUnitOfWork unitOfWork, IFileService fileService) : 
         var filePath = await _fileService.UploadFile(model.Video);
         exArticle.VideoUrl = filePath;
         await _unitOfWork.ArticleRepository.Update(exArticle);
+        await Set();
         return exArticle;
     }
+
+    private async Task Set()
+    {
+        var articles = await _unitOfWork.ArticleRepository.GetAll();
+        _memoryCache.SetCache(Key, articles);
+    } 
 
 }

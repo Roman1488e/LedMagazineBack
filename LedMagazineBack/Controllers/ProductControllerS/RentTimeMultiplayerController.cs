@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.RentTimeModels.CreationModels;
@@ -24,6 +25,7 @@ public class RentTimeMultiplayerController(IRentTimeMultiplayerService rentTimeS
 
     [HttpPost("api/rent-time-multiplayers")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Create([FromBody] CreateRentTimeMulModel model)
     {
         try
@@ -39,6 +41,7 @@ public class RentTimeMultiplayerController(IRentTimeMultiplayerService rentTimeS
 
     [HttpPut("api/rent-time-multiplayers")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRentTimeMultModel model)
     {
         try

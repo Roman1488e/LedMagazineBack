@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models.OrderModels.CreationModels;
 using LedMagazineBack.Services.OrderServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +74,8 @@ public class OrderItemController(IOrderItemService orderItemService) : Controlle
 
     [HttpPost("api/orderitem")]
     [Authorize]
-    public async Task<IActionResult> Create(CreateOrderItemModel model)
+    [Validate]
+    public async Task<IActionResult> Create([FromBody]CreateOrderItemModel model)
     {
         try
         {

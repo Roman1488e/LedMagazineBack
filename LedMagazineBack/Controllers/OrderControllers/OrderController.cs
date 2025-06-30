@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models.OrderModels.CreationModels;
 using LedMagazineBack.Models.OrderModels.FilterModel;
 using LedMagazineBack.Models.OrderModels.UpdateModels;
@@ -37,6 +38,7 @@ public class OrderController(IOrderService orderService) : Controller
     
     [HttpPost("api/orders/from-cart-guests")]
     [Authorize(Roles = "guest")]
+    [Validate]
     public async Task<IActionResult> CreateOrderFromCart([FromBody]CreateOrderModel model)
     {
         try
@@ -75,6 +77,7 @@ public class OrderController(IOrderService orderService) : Controller
 
     [HttpPost("api/orders/for-guests")]
     [Authorize(Roles = "guest")]
+    [Validate]
     public async Task<IActionResult> Create([FromBody] CreateOrderModel order)
     {
         try
@@ -105,6 +108,7 @@ public class OrderController(IOrderService orderService) : Controller
     
     [HttpPut("api/orders/{id}")]
     [Authorize]
+    [Validate]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOrderModel order)
     {
         try
