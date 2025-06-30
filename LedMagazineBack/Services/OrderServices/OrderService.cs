@@ -25,7 +25,7 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         if(model.page == 0)
             model.page = 1;
         if(model.pageSize == 0)
-            model.pageSize = 100;
+            model.pageSize = 10;
         var orders = await _unitOfWork.OrderRepository.GetAll(
             model.productName, model.orgName,
             model.isAccepted, model.isActive,
@@ -107,6 +107,8 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         }
         
         await _unitOfWork.CartItemRepository.DeleteRange(cart.Items);
+        cart.TotalPrice = 0;
+        await _unitOfWork.CartRepository.Update(cart);
         await _telegramService.GenerateMessageAsync(createdOrder.Id);
         await Set();
         return createdOrder;
@@ -149,8 +151,16 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         }
         await _unitOfWork.CartItemRepository.DeleteRange(cart.Items);
         await _telegramService.GenerateMessageAsync(createdOrder.Id);
+        cart.TotalPrice = 0;
+        await _unitOfWork.CartRepository.Update(cart);
         await Set();
         return createdOrder;
+    }
+
+    public async Task<Order?> GetByOrderNumber(uint orderNumber)
+    {
+        var order = await _unitOfWork.OrderRepository.GetByOrderNumber(orderNumber);
+        return order;
     }
 
     public async Task<Order> Create()
@@ -221,8 +231,7 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
     
     private async Task Set()
     {
-        var customers = await _unitOfWork.OrderRepository.GetAll(null, null, null, null, null, null,
-            null, null, null, 1, 100);
+        var customers = await _unitOfWork.OrderRepository.GetAll();
         _cache.SetCache(Key,customers);
     }
 }

@@ -1,5 +1,6 @@
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.CreationModels;
+using LedMagazineBack.Models.ProductModels.FiltrModels;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
 using LedMagazineBack.Services.ProductServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,17 @@ public class ProductController(IProductService productService) : Controller
 
     [HttpGet("api/products")]
     [Authorize]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] ProductsFilterModel model)
     {
-        var result = await _productService.GetAll();
-        return Ok(result);
+        try
+        {
+            var result = await _productService.GetAll(model);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("api/products/{id}")]
@@ -139,36 +147,6 @@ public class ProductController(IProductService productService) : Controller
         catch (Exception e)
         {
             return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet("api/products/filter")]
-    [Authorize]
-    public async Task<IActionResult> GetFiltered(
-        [FromQuery] string? districts,
-        [FromQuery] string? screenSizes,
-        [FromQuery] decimal minPrice,
-        [FromQuery] decimal maxPrice,
-        [FromQuery] string? screenResolutions,
-        [FromQuery] int page,
-        [FromQuery] int pageSize)
-    {
-        try
-        {
-            var result = await _productService.GetFiltered(
-                districts,
-                screenSizes,
-                minPrice,
-                maxPrice,
-                screenResolutions,
-                page,
-                pageSize);
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
         }
     }
 

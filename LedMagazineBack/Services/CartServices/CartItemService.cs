@@ -5,12 +5,15 @@ using LedMagazineBack.Models;
 using LedMagazineBack.Models.CartModels.CreationModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.CartServices.Abstract;
+using LedMagazineBack.Services.PriceServices.Abstract;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LedMagazineBack.Services.CartServices;
 
-public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper) : ICartItemService
+public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper, IPriceService priceService) : ICartItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IPriceService _priceService = priceService;
     private readonly UserHelper  _userHelper = userHelper;
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
@@ -49,8 +52,7 @@ public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper) : IC
             ProductName = product.Name,
             ImageUrl = product.ImageUrl,
             CartId = cart.Id,
-            Price = product.BasePrice * (decimal)product
-                .RentTimeMultiplayer.MonthsDifferenceMultiplayer + (decimal)product.RentTimeMultiplayer.SecondsDifferenceMultiplayer * product.BasePrice
+            Price = await _priceService.GeneratePrice(model.ProductId, model.RentMonths, model.RentSeconds ),
         };
         var createdItem = await _unitOfWork.CartItemRepository.Create(cartItem);
         cart.TotalPrice += createdItem.Price;
@@ -63,7 +65,6 @@ public class CartItemService(IUnitOfWork unitOfWork, UserHelper userHelper) : IC
             EndOfRentDate = DateTime.UtcNow.AddMonths(model.RentMonths),
             CartItemId = createdItem.Id
         };
-
         await _unitOfWork.RentTimeRepository.Create(rentTime);
 
         return createdItem;

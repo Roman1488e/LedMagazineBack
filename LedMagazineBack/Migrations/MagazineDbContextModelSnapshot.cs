@@ -240,11 +240,11 @@ namespace LedMagazineBack.Migrations
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("OrderNumber")
+                    b.Property<long>("OrderNumber")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderNumber"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderNumber"));
 
                     b.Property<string>("OrganisationName")
                         .IsRequired()

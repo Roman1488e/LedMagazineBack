@@ -1,5 +1,6 @@
 using LedMagazineBack.Context;
 using LedMagazineBack.Helpers;
+using LedMagazineBack.Models.TelegramModel;
 using LedMagazineBack.Seeders;
 using LedMagazineBack.Services.TelegramServices;
 using LedMagazineBack.Services.TelegramServices.Abstract;
@@ -47,6 +48,7 @@ builder.Services.AddDbContext<MagazineDbContext>(options => options.UseNpgsql(co
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddStaticRepositories();
 builder.Services.AddMemoryCache();
+builder.Services.Configure<TelegramSettings>(builder.Configuration.GetSection("TelegramSettings"));
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<ITelegramService, TelegramService>();
 builder.Services.AddStaticServices();

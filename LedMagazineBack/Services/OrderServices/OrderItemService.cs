@@ -4,16 +4,18 @@ using LedMagazineBack.Models.OrderModels.CreationModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.MemoryServices.Abstract;
 using LedMagazineBack.Services.OrderServices.Abstract;
+using LedMagazineBack.Services.PriceServices.Abstract;
 using LedMagazineBack.Services.TelegramServices.Abstract;
 
 namespace LedMagazineBack.Services.OrderServices;
 
-public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService, IMemoryCacheService cache) : IOrderItemService
+public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService, IMemoryCacheService cache, IPriceService price) : IOrderItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ITelegramService _telegramService = telegramService;
     private readonly UserHelper _userHelper = userHelper;
     private readonly IMemoryCacheService _cache = cache;
+    private readonly IPriceService _price = price;
     private const string Key = "OrdersItems";
 
     public async Task<List<OrderItem>> GetAll()
@@ -71,30 +73,32 @@ public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, ITe
     {
         var product = await _unitOfWork.ProductRepository.GetById(model.ProductId);
         var order = await _unitOfWork.OrderRepository.GetById(model.OrderId);
+        if(order.Items.Count != 0)
+            throw new Exception("This order already has order items. Create new one first");
         var orderItem = new OrderItem()
         {
             ImageUrl = product.ImageUrl,
             ProductName = product.Name,
             OrderId = model.OrderId,
             ProductId = product.Id,
-        };
-        var createdOrderItem = await _unitOfWork.OrderItemRepository.Create(orderItem);
+        }; 
+        await _unitOfWork.OrderItemRepository.Create(orderItem);
         var rentTime = new RentTime()
         {
-            OrderItemId = createdOrderItem.Id,
+            OrderItemId = orderItem.Id,
             RentSeconds = model.RentSeconds,
             RentMonths = model.RentMonths,
             CreatedDate = DateTime.UtcNow,
             EndOfRentDate = DateTime.UtcNow.AddMonths(model.RentMonths)
         };
         await _unitOfWork.RentTimeRepository.Create(rentTime);
-        orderItem.Price = product.BasePrice * (decimal)product.RentTimeMultiplayer.MonthsDifferenceMultiplayer + product.BasePrice * (decimal)product.RentTimeMultiplayer.SecondsDifferenceMultiplayer;
+        orderItem.Price = await _price.GeneratePrice(product.Id, model.RentMonths, model.RentSeconds);
         await _unitOfWork.OrderItemRepository.Update(orderItem);
-        order.TotalPrice += createdOrderItem.Price;
+        order.TotalPrice += orderItem.Price;
         await _unitOfWork.OrderRepository.Update(order);
         await _telegramService.GenerateMessageAsync(orderItem.OrderId);
         await Set();
-        return createdOrderItem;
+        return orderItem;
     }
 
     public async Task<OrderItem> Delete(Guid id)

@@ -33,10 +33,11 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
         return product;
     }
 
+
     public async Task<List<Product>> GetAll()
     {
-        var products = await _context.Products.AsNoTracking().Include(x=> x.Location).Include(x=> x.RentTimeMultiplayer)
-            .Include(x=> x.ScreenSpecifications).ToListAsync();
+        var products = await _context.Products.AsNoTracking().Include(x=> x.Location)
+            .Include(x=>x.ScreenSpecifications).ToListAsync();
         return products;
     }
 
@@ -49,19 +50,13 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
         return product;
     }
 
-    public async Task<List<Product>> GetActive()
-    {
-        var products = await _context.Products.AsNoTracking().Include(x=> x.Location).Include(x=> x.RentTimeMultiplayer)
-            .Include(x=> x.ScreenSpecifications).ToListAsync();
-        return products;
-    }
-
-    public async Task<List<Product>> GetFiltered(
+    public async Task<List<Product>> GetAll(
         string? districts,
         string? screenSizes,
         decimal minPrice,
         decimal maxPrice,
         string? screenResolutions,
+        bool? isActive,
         int page = 1,
         int pageSize = 10)
     {
@@ -69,8 +64,13 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
             .AsNoTracking()
             .Include(x => x.Location)
             .Include(x => x.ScreenSpecifications)
-            .Include(x=> x.RentTimeMultiplayer)
+            .Include(x => x.RentTimeMultiplayer)
             .AsQueryable();
+        
+        if (isActive.HasValue)
+        {
+            query = query.Where(x => x.IsActive == isActive.Value);
+        }
 
         if (!string.IsNullOrEmpty(districts))
         {
@@ -94,10 +94,12 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
         {
             query = query.Where(x => x.BasePrice >= minPrice && x.BasePrice <= maxPrice);
         }
-        
+
         query = query.Skip((page - 1) * pageSize).Take(pageSize);
 
         return await query.ToListAsync();
     }
+
+
 
 }

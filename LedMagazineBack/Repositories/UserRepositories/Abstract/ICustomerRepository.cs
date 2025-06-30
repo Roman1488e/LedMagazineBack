@@ -5,11 +5,14 @@ namespace LedMagazineBack.Repositories.UserRepositories.Abstract;
 
 public interface ICustomerRepository : IBaseRepository<Customer>
 {
+    public Task<List<Customer>> GetAll(
+        string? role,
+        string? organisationName,
+        string? anyWord,
+        bool? isVerified,
+        int page,
+        int pageSize);
     public Task<List<Customer>> GetAll();
+    public Task<Customer?> GetByUsername(string username);
     public Task<Customer> GetById(Guid id);
-    public Task<List<Customer>> GetAllByRole(string role);
-    public Task<List<Customer>> GetVerified();
-    public Task<List<Customer>> GetByOrgName(string role);
-    public Task<Customer?> GetByUsername(string userName);
-    public Task<List<Customer>> GetByAnyWord(string word);
 }

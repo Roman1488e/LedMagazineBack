@@ -51,7 +51,7 @@ public class CartRepository(MagazineDbContext context) : ICartRepository
 
     public async Task<Cart?> GetByCustomerId(Guid customerId)
     {
-        var cart = await _context.Carts.AsNoTracking()
+        var cart = await _context.Carts
             .Include(x=> x.Items).ThenInclude(x=> x.RentTime).SingleOrDefaultAsync(x => x.CustomerId == customerId);
         return cart;
     }

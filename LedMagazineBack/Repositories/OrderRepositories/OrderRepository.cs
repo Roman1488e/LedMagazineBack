@@ -41,12 +41,29 @@ public class OrderRepository(MagazineDbContext context) : IOrderRepository
     {
         var entity = await _context.Orders
             .Include(x=>x.Items)
+            .ThenInclude(x=> x.RentTime)
             .SingleOrDefaultAsync(x => x.Id == id);
         if (entity == null)
             throw new Exception($"Order not found");
         return entity;
     }
-    
+
+    public async Task<List<Order>> GetAll()
+    {
+        var orders = await _context.Orders.AsNoTracking()
+            .Include(x=> x.Items).ToListAsync();
+        return orders;
+    }
+
+    public async Task<Order?> GetByOrderNumber(uint orderNumber)
+    {
+        var order = await _context.Orders
+            .Include(x=> x.Items)
+            .ThenInclude(x=> x.RentTime)
+            .SingleOrDefaultAsync(x => x.OrderNumber == orderNumber);
+        return order;
+    }
+
 
     public async Task<List<Order>> GetAll(
         string? productName = null,
@@ -111,7 +128,7 @@ public class OrderRepository(MagazineDbContext context) : IOrderRepository
 
     public async Task<List<Order>> GetByUserId(Guid userId)
     {
-        var orders = await _context.Orders.AsNoTracking().Include(x => x.Items)
+        var orders = await _context.Orders.Include(x => x.Items)
             .Where(x=> x.CustomerId == userId || x.SessionId == userId).ToListAsync();
         return orders;
     }

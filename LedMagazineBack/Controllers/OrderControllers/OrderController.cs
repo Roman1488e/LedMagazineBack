@@ -64,6 +64,14 @@ public class OrderController(IOrderService orderService) : Controller
             return NotFound(e.Message);
         }
     }
+    
+    [HttpGet("api/orders/by-order-number/{id}")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetByOrderNumber(uint orderNumber)
+    {
+        var result = await _orderService.GetByOrderNumber(orderNumber);
+        return Ok(result);
+    }
 
     [HttpPost("api/orders/for-guests")]
     [Authorize(Roles = "guest")]

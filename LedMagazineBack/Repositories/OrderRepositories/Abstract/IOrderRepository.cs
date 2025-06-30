@@ -6,7 +6,8 @@ namespace LedMagazineBack.Repositories.OrderRepositories.Abstract;
 public interface IOrderRepository : IBaseRepository<Order>
 {
     public Task<Order> GetById(Guid id);
-
+    public Task<List<Order>> GetAll();
+    public Task<Order?> GetByOrderNumber(uint orderNumber);
     public Task<List<Order>> GetAll(
         string? productName ,
         string? orgName,

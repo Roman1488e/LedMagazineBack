@@ -4,6 +4,7 @@ using LedMagazineBack.Helpers;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
 using LedMagazineBack.Models.UserModels.Auth;
+using LedMagazineBack.Models.UserModels.FilterModels;
 using LedMagazineBack.Models.UserModels.UpdateModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.MemoryServices.Abstract;
@@ -21,13 +22,21 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
     private const string Key = "customers";
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
-    public async Task<List<Customer>> GetAll()
+    public async Task<List<Customer>> GetAll(FilterCustomersModel model)
     {
-        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
-        if (cachedCustomers is not null && cachedCustomers.Count != 0)
-            return cachedCustomers;
         await Set();
-        var customers = await _unitOfWork.CustomerRepository.GetAll();
+        if(model.page == 0)
+            model.page = 1;
+        if(model.pageSize == 0)
+            model.pageSize = 10;
+        var customers = await _unitOfWork.CustomerRepository.GetAll(
+           model.role,
+           model.organisationName,
+           model.anyWord,
+           model.isVerified,
+           model.page,
+           model.pageSize
+            );
         return customers;
     }
 
@@ -102,7 +111,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var customer = await _unitOfWork.CustomerRepository.GetByUsername(model.Username);
         if(customer is not null)
             throw new Exception("Username already exists");
-        exCustomer.Username = model.Username;
+        exCustomer.Username = model.Username.ToLower();
         await Set();
         await _unitOfWork.CustomerRepository.Update(exCustomer);
         return exCustomer;
@@ -145,32 +154,7 @@ public class CustomerService(IJwtService jwtService, IUnitOfWork unitOfWork, Use
         var customer = await _unitOfWork.CustomerRepository.Delete(id.Value);
         return customer;
     }
-
-    public async Task<List<Customer>> GetAllUsers()
-    {
-        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
-        if (cachedCustomers is not null && cachedCustomers.Count != 0)
-        {
-            var cachedCustomer = cachedCustomers.Where(x=> x.Role == _rolesConstants.Customer).ToList();
-            return cachedCustomer;
-        }
-        await Set();
-        var customers = await _unitOfWork.CustomerRepository.GetAllByRole(_rolesConstants.Customer);
-        return customers;
-    }
-
-    public async Task<List<Customer>> GetAllAdmins()
-    {
-        var cachedCustomers = _cache.GetCache<List<Customer>>(Key);
-        if (cachedCustomers is not null && cachedCustomers.Count != 0)
-        {
-            var cachedCustomer = cachedCustomers.Where(x=> x.Role == _rolesConstants.Admin).ToList();
-            return cachedCustomer;
-        }
-        await Set();
-        var customers = await _unitOfWork.CustomerRepository.GetAllByRole(_rolesConstants.Admin);
-        return customers;
-    }
+    
 
     public async Task<string> Login(LoginModel model)
     {

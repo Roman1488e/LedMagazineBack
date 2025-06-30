@@ -1,6 +1,7 @@
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.CreationModels;
+using LedMagazineBack.Models.ProductModels.FiltrModels;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.FileServices.Abstract;
@@ -13,9 +14,22 @@ public class ProductService(IUnitOfWork unitOfWork, IFileService fileService) : 
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IFileService _fileService = fileService;
 
-    public async Task<List<Product>> GetAll()
+    public async Task<List<Product>> GetAll(ProductsFilterModel filterModel)
     {
-        var products = await _unitOfWork.ProductRepository.GetAll();
+        if(filterModel.page == 0)
+            filterModel.page = 1;
+        if(filterModel.pageSize == 0)
+            filterModel.pageSize = 10;
+        var products = await _unitOfWork.ProductRepository.GetAll(
+         filterModel.districts,
+         filterModel.screenSizes,
+         filterModel.minPrice,
+         filterModel.maxPrice,
+         filterModel.screenResolutions,
+         filterModel.isActive,
+         filterModel.page,
+         filterModel.pageSize
+            );
         return products;
     }
 
@@ -123,13 +137,5 @@ public class ProductService(IUnitOfWork unitOfWork, IFileService fileService) : 
         product.VideoUrl = videoUrl;
         await _unitOfWork.ProductRepository.Update(product);
         return product;
-    }
-
-    public async Task<List<Product>> GetFiltered(string? districts, string? screenSizes, decimal minPrice, decimal maxPrice, string? screenResolutions,
-        int page, int pageSize)
-    {
-        var products = await _unitOfWork.ProductRepository
-            .GetFiltered(districts, screenSizes, minPrice, maxPrice, screenResolutions, page, pageSize);
-        return products;
     }
 }

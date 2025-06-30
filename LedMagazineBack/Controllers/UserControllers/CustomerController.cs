@@ -3,6 +3,7 @@ using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
 using LedMagazineBack.Models.UserModels.Auth;
+using LedMagazineBack.Models.UserModels.FilterModels;
 using LedMagazineBack.Models.UserModels.UpdateModels;
 using LedMagazineBack.Services.UserServices.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -18,9 +19,9 @@ public class CustomerController(ICustomerService customerService, IGuestService 
 
     [HttpGet("api/customers")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] FilterCustomersModel model)
     {
-        var customers = await _customerService.GetAllUsers();
+        var customers = await _customerService.GetAll(model);
         return Ok(customers);
     }
     
@@ -189,14 +190,4 @@ public class CustomerController(ICustomerService customerService, IGuestService 
             return NotFound(e.Message);
         }
     }
-    
-    [HttpGet("api/admins")]
-    [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetAllAdmins()
-    {
-        var customers = await _customerService.GetAllAdmins();
-        return Ok(customers);
-    }
-    
-    
 }

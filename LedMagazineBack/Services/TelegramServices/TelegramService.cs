@@ -1,5 +1,7 @@
+using LedMagazineBack.Models.TelegramModel;
 using LedMagazineBack.Repositories.BasicRepositories.Abstract;
 using LedMagazineBack.Services.TelegramServices.Abstract;
+using Microsoft.Extensions.Options;
 
 namespace LedMagazineBack.Services.TelegramServices;
 
@@ -8,54 +10,65 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-public class TelegramService(HttpClient httpClient, IUnitOfWork unitOfWork) : ITelegramService
+public class TelegramService(HttpClient httpClient, IOptions<TelegramSettings> options, IUnitOfWork unitOfWork) : ITelegramService
 {
+    private readonly TelegramSettings _settings = options.Value;
+    private readonly HttpClient _httpClient = httpClient;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private const string BotToken = "8189559523:AAGYnnD3GCUWM3a8FRtVENBAybI021dRj14";
-    private const string ChatId = "527422045";
 
     public async Task SendMessageAsync(string message)
     {
-        const string url = $"https://api.telegram.org/bot{BotToken}/sendMessage";
+        if (string.IsNullOrEmpty(_settings.BotToken) || _settings.ChatIds.Count == 0)
+            return;
 
-        var payload = new
+        foreach (var chatId in _settings.ChatIds)
         {
-            chat_id = ChatId,
-            text = message
-        };
+            var url = $"https://api.telegram.org/bot{_settings.BotToken}/sendMessage";
 
-        var content = new StringContent(
-            JsonSerializer.Serialize(payload),
-            Encoding.UTF8,
-            "application/json");
+            var payload = new
+            {
+                chat_id = chatId,
+                text = message,
+                parse_mode = "HTML"
+            };
 
-        var response = await httpClient.PostAsync(url, content);
+            var content = new StringContent(
+                JsonSerializer.Serialize(payload),
+                Encoding.UTF8,
+                "application/json");
 
-        response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode) continue;
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"❌ Ошибка отправки Telegram-сообщения: {error}");
+        }
     }
-
+    
     public async Task GenerateMessageAsync(Guid orderId)
     {
         var order = await _unitOfWork.OrderRepository.GetById(orderId);
 
         var message = new StringBuilder();
-        message.AppendLine($"#Order {order.OrderNumber}");
-        message.AppendLine($"Order Id: {order.Id}");
-        message.AppendLine($"\nDate: {order.Created}");
-        message.AppendLine($"\nClient info:\n-Phone Number: {order.PhoneNumber}.\n-Organisation Name: {order.OrganisationName}.");
-        message.AppendLine($"\nPrice: {order.TotalPrice}");
-        message.AppendLine("\nItems:");
+        message.AppendLine($"📦 Новый заказ №{order.OrderNumber}");
+        message.AppendLine($"🆔 ID заказа: {order.Id}");
+        message.AppendLine($"\n🕒 Дата оформления: {order.Created:dd.MM.yyyy HH:mm}");
+        message.AppendLine($"\n👤 Информация о клиенте:");
+        message.AppendLine($"📞 Номер телефона: {order.PhoneNumber ?? "не указан"}");
+        message.AppendLine($"🏢 Название организации: {order.OrganisationName ?? "не указано"}");
+        message.AppendLine($"\n💰 Общая сумма: {order.TotalPrice} сум");
+        message.AppendLine("\n📋 Товары:");
 
         foreach (var item in order.Items)
         {
-            message.AppendLine($"Name - {item.ProductName}");
-            message.AppendLine($"Price - {item.Price}");
-            message.AppendLine($"Rent for {item.RentTime.RentSeconds} seconds");
-            message.AppendLine($"Rent for {item.RentTime.RentMonths} months");
-            message.AppendLine("==========================");
+            message.AppendLine($"🖥️ Название: {item.ProductName}");
+            message.AppendLine($"💵 Цена: {item.Price} сум");
+            message.AppendLine($"⏱️ Длительность показа: {item.RentTime?.RentSeconds} секунд");
+            message.AppendLine($"📅 Срок аренды: {item.RentTime?.RentMonths} месяцев");
+            message.AppendLine("➖➖➖➖➖➖➖➖➖");
         }
 
         await SendMessageAsync(message.ToString());
     }
-
 }
+

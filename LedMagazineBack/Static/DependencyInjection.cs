@@ -25,6 +25,8 @@ using LedMagazineBack.Services.MemoryServices;
 using LedMagazineBack.Services.MemoryServices.Abstract;
 using LedMagazineBack.Services.OrderServices;
 using LedMagazineBack.Services.OrderServices.Abstract;
+using LedMagazineBack.Services.PriceServices;
+using LedMagazineBack.Services.PriceServices.Abstract;
 using LedMagazineBack.Services.ProductServices;
 using LedMagazineBack.Services.ProductServices.Abstract;
 using LedMagazineBack.Services.RentTimeServices;
@@ -68,6 +70,7 @@ public static class DependencyInjection
         service.AddScoped<IGuestService, GuestService>();
         service.AddScoped<IRentTimeMultiplayerService, RentTimeMultiplayerService>();
         service.AddScoped<ILocationService, LocationService>();
+        service.AddScoped<IPriceService, PriceService>();
         service.AddScoped<ICartService, CartService>();
         service.AddScoped<ICartItemService, CartItemService>();
         service.AddScoped<ITelegramService, TelegramService>();

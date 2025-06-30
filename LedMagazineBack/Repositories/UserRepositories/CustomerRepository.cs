@@ -33,12 +33,7 @@ public class CustomerRepository(MagazineDbContext context) : ICustomerRepository
         return customer;
     }
 
-    public async Task<List<Customer>> GetAll()
-    {
-        var customers = await _context.Customers.AsNoTracking()
-            .Include(x=> x.Orders).Include(x=> x.Cart).ToListAsync();
-        return customers;
-    }
+    
 
     public async Task<Customer> GetById(Guid id)
     {
@@ -49,57 +44,60 @@ public class CustomerRepository(MagazineDbContext context) : ICustomerRepository
         return customer;
     }
 
-    public async Task<List<Customer>> GetAllByRole(string role)
+    public async Task<List<Customer>> GetAll(
+        string? role = null,
+        string? organisationName = null,
+        string? anyWord = null,
+        bool? isVerified = null,
+        int page = 1,
+        int pageSize = 10)
     {
-        var customers = await _context.Customers.AsNoTracking()
-            .Include(x=> x.Orders).Include(x=> x.Cart)
-            .Where(x=> x.Role == role).ToListAsync();
-        return customers;
-    }
-    
+        var query = _context.Customers
+            .AsNoTracking()
+            .Include(x => x.Orders)
+            .Include(x => x.Cart)
+            .AsQueryable();
 
-    public async Task<List<Customer>> GetVerified()
-    {
-        var customers = await _context.Customers.AsNoTracking()
-            .Include(x=> x.Orders).Include(x=> x.Cart)
-            .Where(x => x.IsVerified).ToListAsync();
-        return customers;
+        if (!string.IsNullOrWhiteSpace(role))
+            query = query.Where(x => x.Role == role);
+
+        if (!string.IsNullOrWhiteSpace(organisationName))
+            query = query.Where(x => x.OrganisationName == organisationName);
+
+        if (isVerified.HasValue)
+            query = query.Where(x => x.IsVerified == isVerified.Value);
+
+        if (!string.IsNullOrWhiteSpace(anyWord))
+        {
+            var word = anyWord.Trim().ToLower();
+            query = query.Where(x =>
+                x.Name.ToLower().Contains(word) ||
+                x.Role.ToLower().Contains(word) ||
+                (x.ContactNumber != null && x.ContactNumber.ToLower().Contains(word)));
+        }
+
+        return await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
     }
 
-    public async Task<List<Customer>> GetByOrgName(string orgName)
+    public async Task<List<Customer>> GetAll()
     {
-        var customers = await _context.Customers.AsNoTracking()
-            .Include(x=> x.Orders).Include(x=> x.Cart)
-            .Where(x=> x.OrganisationName == orgName).ToListAsync();
+        var customers = await _context.Customers
+            .Include(x => x.Orders).Include(x => x.Cart).ToListAsync();
         return customers;
     }
 
     public async Task<Customer?> GetByUsername(string userName)
     {
-        var customer = await _context.Customers.Include(x=> x.Orders).Include(x=> x.Cart)
-            .SingleOrDefaultAsync(x => x.Username == userName);
-        return customer;
-    }
-
-    public async Task<List<Customer>> GetByAnyWord(string word)
-    {
-        if (string.IsNullOrWhiteSpace(word))
-            return new List<Customer>();
-
-        word = word.ToLower().Trim();
-
-        var customers = await _context.Customers
-            .AsNoTracking()
+        return await _context.Customers
             .Include(x => x.Orders)
             .Include(x => x.Cart)
-            .Where(x =>
-                x.Name.ToLower().Contains(word) ||
-                x.Role.ToLower().Contains(word) ||
-                (x.ContactNumber != null && x.ContactNumber.ToLower().Contains(word)) ||
-                x.Username.ToLower().Contains(word))
-            .ToListAsync();
-
-        return customers;
+            .SingleOrDefaultAsync(x => x.Username == userName.ToLower());
     }
+
+
+
 
 }

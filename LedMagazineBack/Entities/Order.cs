@@ -11,7 +11,7 @@ public class Order
     public bool IsPrimary { get; set; }
     public string OrganisationName { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int OrderNumber { get; set; }
+    public uint OrderNumber { get; set; }
     public string PhoneNumber { get; set; } 
     public List<OrderItem> Items { get; set; } = [];
     public decimal TotalPrice { get; set; }
