@@ -1,5 +1,6 @@
 using FluentValidation;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
+using LedMagazineBack.Models.UserModels.UpdateModels;
 
 namespace LedMagazineBack.Validators.UserValidators;
 

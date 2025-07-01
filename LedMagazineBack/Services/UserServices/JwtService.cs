@@ -26,7 +26,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
 
         var security = new JwtSecurityToken(issuer: JwtParam.Issuer,
             audience: JwtParam.Audience, signingCredentials: signingKey,
-            claims: claims, expires: DateTime.Now.AddSeconds(10));
+            claims: claims, expires: DateTime.Now.AddYears(1));
 
 
         var token = new JwtSecurityTokenHandler()
@@ -49,7 +49,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
 
         var security = new JwtSecurityToken(issuer: JwtParam.Issuer,
             audience: JwtParam.Audience, signingCredentials: signingKey,
-            claims: claims, expires: DateTime.Now.AddSeconds(10));
+            claims: claims, expires: DateTime.Now.AddYears(1));
 
 
         var token = new JwtSecurityTokenHandler()

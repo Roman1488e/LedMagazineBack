@@ -9,10 +9,10 @@ using LedMagazineBack.Services.TelegramServices.Abstract;
 
 namespace LedMagazineBack.Services.OrderServices;
 
-public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService, IPriceService price) : IOrderItemService
+public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, IPriceService price, IServiceScopeFactory scopeFactory) : IOrderItemService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ITelegramService _telegramService = telegramService;
+    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly UserHelper _userHelper = userHelper;
     private readonly IPriceService _price = price;
 
@@ -67,7 +67,19 @@ public class OrderItemService(IUnitOfWork unitOfWork, UserHelper userHelper, ITe
         await _unitOfWork.OrderItemRepository.Update(orderItem);
         order.TotalPrice += orderItem.Price;
         await _unitOfWork.OrderRepository.Update(order);
-        await _telegramService.GenerateMessageAsync(orderItem.OrderId);
+        _ = Task.Run((Func<Task>)(async () =>
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var telegramService = scope.ServiceProvider.GetRequiredService<ITelegramService>();
+            try
+            {
+                await telegramService.GenerateMessageAsync(orderItem.OrderId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Ошибка отправки уведомления Telegram: {ex.Message}");
+            }
+        }));
         return orderItem;
     }
 

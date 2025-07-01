@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.CreationModels;
@@ -53,6 +54,7 @@ public class ScreenSpecificationsController(IScreenSpecificationsService screenS
 
     [HttpPost("api/screen-specifications")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Create([FromBody] CreateScreenSpecsModel screenSpecifications)
     {
         try
@@ -68,6 +70,7 @@ public class ScreenSpecificationsController(IScreenSpecificationsService screenS
 
     [HttpPut("api/screen-specifications/{id}")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Update(Guid id,[FromBody] UpdateScreenSpecsModel model)
     {
         try

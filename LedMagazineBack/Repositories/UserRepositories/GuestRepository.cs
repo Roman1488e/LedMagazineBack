@@ -49,6 +49,12 @@ public class GuestRepository(MagazineDbContext context) : IGuestRepository
         return guest;
     }
 
+    public async Task ClearAll()
+    {
+        _context.Guests.RemoveRange(_context.Guests);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<Guest> GetBySessionId(Guid sessionId)
     {
         var guest =  await _context.Guests.Include(x=> x.Cart).Include(x=> x.Orders)

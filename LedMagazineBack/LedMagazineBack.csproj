@@ -27,6 +27,7 @@
     <ItemGroup>
       <Folder Include="Models\CartModels\UpdateModels\" />
       <Folder Include="Repositories\Abstract\" />
+      <Folder Include="Validators\CartValidators\UpdateValidators\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 

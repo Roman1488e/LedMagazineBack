@@ -11,10 +11,10 @@ using LedMagazineBack.Services.TelegramServices.Abstract;
 
 namespace LedMagazineBack.Services.OrderServices;
 
-public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegramService telegramService) : IOrderService
+public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, IServiceScopeFactory scopeFactory) : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ITelegramService _telegramService = telegramService;
+    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly UserHelper  _userHelper = userHelper;
     private readonly RolesConstants  _rolesConstants = new RolesConstants();
 
@@ -96,7 +96,19 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
         await _unitOfWork.CartItemRepository.DeleteRange(cart.Items);
         cart.TotalPrice = 0;
         await _unitOfWork.CartRepository.Update(cart);
-        await _telegramService.GenerateMessageAsync(createdOrder.Id);
+        _ = Task.Run((Func<Task>)(async () =>
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var telegramService = scope.ServiceProvider.GetRequiredService<ITelegramService>();
+            try
+            {
+                await telegramService.GenerateMessageAsync(order.Id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Ошибка отправки уведомления Telegram: {ex.Message}");
+            }
+        }));
         return createdOrder;
     }
 
@@ -136,7 +148,19 @@ public class OrderService(IUnitOfWork unitOfWork, UserHelper userHelper, ITelegr
             await _unitOfWork.RentTimeRepository.Update(rentTime);
         }
         await _unitOfWork.CartItemRepository.DeleteRange(cart.Items);
-        await _telegramService.GenerateMessageAsync(createdOrder.Id);
+        _ = Task.Run((Func<Task>)(async () =>
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var telegramService = scope.ServiceProvider.GetRequiredService<ITelegramService>();
+            try
+            {
+                await telegramService.GenerateMessageAsync(order.Id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Ошибка отправки уведомления Telegram: {ex.Message}");
+            }
+        }));
         cart.TotalPrice = 0;
         await _unitOfWork.CartRepository.Update(cart);
         return createdOrder;

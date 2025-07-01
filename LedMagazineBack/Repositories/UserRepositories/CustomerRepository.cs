@@ -59,10 +59,10 @@ public class CustomerRepository(MagazineDbContext context) : ICustomerRepository
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(role))
-            query = query.Where(x => x.Role == role);
+            query = query.Where(x => x.Role == role.ToLower());
 
         if (!string.IsNullOrWhiteSpace(organisationName))
-            query = query.Where(x => x.OrganisationName == organisationName);
+            query = query.Where(x => x.OrganisationName.ToLower() == organisationName.ToLower());
 
         if (isVerified.HasValue)
             query = query.Where(x => x.IsVerified == isVerified.Value);

@@ -49,7 +49,7 @@ public class ArticleRepository(MagazineDbContext context) : IArticleRepository
 
     public async Task<List<Article>> GetByTitle(string title)
     {
-        var articles = await _context.Articles.AsNoTracking().Where(x => x.Title == title).ToListAsync();
+        var articles = await _context.Articles.AsNoTracking().Where(x => x.Title.ToLower() == title.ToLower()).ToListAsync();
         return articles;
     }
 

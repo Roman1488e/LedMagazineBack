@@ -1,4 +1,4 @@
-namespace LedMagazineBack.Models.ProductModels.UpdateModels;
+namespace LedMagazineBack.Models.UserModels.UpdateModels;
 
 public class UpdateContactNumberModel
 {

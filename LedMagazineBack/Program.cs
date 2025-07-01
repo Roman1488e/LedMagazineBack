@@ -16,8 +16,6 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 var connectionString = builder.Configuration.GetConnectionString("MagazineDb");
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -101,7 +99,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -110,6 +107,25 @@ if (app.Environment.IsDevelopment())
 await DbSeeder.SeedAdminAsync(app.Services);
 app.UseHttpsRedirection();
 app.MapControllers();
+app.UseCors(options =>
+{
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
+});
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<MagazineDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Ошибка при миграции БД: {ex.Message}");
+    }
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();

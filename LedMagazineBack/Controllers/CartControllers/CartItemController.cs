@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Entities;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.CartModels.CreationModels;
@@ -37,6 +38,7 @@ public class CartItemController(ICartItemService service) : Controller
 
     [HttpPost("api/cartItems")]
     [Authorize]
+    [Validate]
     public async Task<IActionResult> Create([FromBody] CreateCartItemModel cartItem)
     {
         try

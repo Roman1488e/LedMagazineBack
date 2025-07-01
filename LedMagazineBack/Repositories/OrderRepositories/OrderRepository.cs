@@ -86,13 +86,13 @@ public class OrderRepository(MagazineDbContext context) : IOrderRepository
         if (!string.IsNullOrWhiteSpace(productName))
         {
             query = query.Where(order =>
-                order.Items.Any(item => item.ProductName.Contains(productName)));
+                order.Items.Any(item => item.ProductName.ToLower().Contains(productName.ToLower())));
         }
 
         if (!string.IsNullOrWhiteSpace(orgName))
         {
             query = query.Where(order =>
-                order.OrganisationName.Contains(orgName));
+                order.OrganisationName.ToLower().Contains(orgName.ToLower()));
         }
 
         if (isAccepted.HasValue)

@@ -1,4 +1,4 @@
-using LedMagazineBack.Models;
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models.ProductModels.CreationModels;
 using LedMagazineBack.Models.ProductModels.FiltrModels;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
@@ -45,6 +45,7 @@ public class ProductController(IProductService productService) : Controller
 
     [HttpPost("api/products")]
     [Authorize(Roles = "admin")]
+    [Validate]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> Create([FromForm] CreateProductModel model)
     {
@@ -76,6 +77,7 @@ public class ProductController(IProductService productService) : Controller
 
     [HttpPut("api/products/{id}/general-info")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> UpdateGeneralInfo(Guid id, [FromBody] UpdateProductGenInfoModel model)
     {
         try
@@ -122,6 +124,7 @@ public class ProductController(IProductService productService) : Controller
     
     [HttpPut("api/products/{id}/price")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] UpdateProductPriceModel model)
     {
         try

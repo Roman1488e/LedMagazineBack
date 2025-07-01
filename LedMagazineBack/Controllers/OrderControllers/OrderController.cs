@@ -67,11 +67,11 @@ public class OrderController(IOrderService orderService) : Controller
         }
     }
     
-    [HttpGet("api/orders/by-order-number/{id}")]
+    [HttpGet("api/orders/by-order-number/{number}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetByOrderNumber(uint orderNumber)
+    public async Task<IActionResult> GetByOrderNumber(uint number)
     {
-        var result = await _orderService.GetByOrderNumber(orderNumber);
+        var result = await _orderService.GetByOrderNumber(number);
         return Ok(result);
     }
 

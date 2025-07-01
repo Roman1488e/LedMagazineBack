@@ -74,6 +74,12 @@ public class GuestService(IUnitOfWork unitOfWork, IJwtService jwtService, UserHe
         return guest;
     }
 
+    public async Task ClearAll()
+    {
+        await _unitOfWork.GuestRepository.ClearAll();
+        await Set();
+    }
+
     public async Task<Guest> DeleteBySessionId(Guid sessionId)
     {
         var guest = await _unitOfWork.GuestRepository.GetBySessionId(sessionId);

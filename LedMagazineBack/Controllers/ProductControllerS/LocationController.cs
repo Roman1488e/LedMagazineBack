@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.ProductModels.CreationModels;
 using LedMagazineBack.Models.ProductModels.UpdateModels;
@@ -37,6 +38,7 @@ public class LocationController(ILocationService locationService) : Controller
 
     [HttpPost("api/locations")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Create([FromBody] CreateLocationModel model)
     {
         try
@@ -67,6 +69,7 @@ public class LocationController(ILocationService locationService) : Controller
 
     [HttpPut("api/locations/{id}")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLocationModel model)
     {
         try

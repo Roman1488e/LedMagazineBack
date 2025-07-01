@@ -84,12 +84,12 @@ public class LocationService(IUnitOfWork unitOfWork, IMemoryCacheService cache) 
             existingLocation.District = model.District;
             check = true;
         }
-        if (model.Latitude is not null)
+        if (model.Latitude != 0.0d)
         {
             existingLocation.Latitude = model.Latitude;
             check = true;
         }
-        if (model.Longitude is not null)
+        if (model.Longitude != 0.0d)
         {
             existingLocation.Longitude = model.Longitude;
             check = true;

@@ -9,5 +9,6 @@ public interface IGuestService
     public Task<Guest> GetById(Guid id);
     public Task<Guest> GetBySessionId(Guid sessionId);
     public Task<Guest> DeleteBySessionId();
+    public Task ClearAll();
     public Task<Guest> DeleteBySessionId(Guid sessionId);
 }

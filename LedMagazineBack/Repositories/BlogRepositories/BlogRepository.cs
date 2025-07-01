@@ -33,7 +33,8 @@ public class BlogRepository(MagazineDbContext context) : IBlogRepository
 
     public async Task<List<Blog>> GetAll()
     {
-        var blogs = await _context.Blogs.AsNoTracking().Include(x=> x.Articles).ToListAsync();
+        var blogs = await _context.Blogs.Include(x=> x.Articles)
+            .AsNoTracking().ToListAsync();
         return blogs;
     }
 

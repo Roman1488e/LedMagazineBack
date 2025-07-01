@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\1fd630e5-0201-4782-9434-1c2d54169bb1.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\1fd630e5-0201-4782-9434-1c2d54169bb1.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\389383e4-6722-4fca-ba60-ff54a00cb40f.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\389383e4-6722-4fca-ba60-ff54a00cb40f.jpeg"
+    },
+    {
       "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\4c5f81e8-cd34-4e99-96bd-54cc1799840c.jpeg",
       "PackagePath": "staticwebassets\\uploads\\4c5f81e8-cd34-4e99-96bd-54cc1799840c.jpeg"
     },
@@ -11,6 +19,10 @@
     {
       "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\632f956a-02b8-48bf-a0fd-1d75c2fb7701.jpeg",
       "PackagePath": "staticwebassets\\uploads\\632f956a-02b8-48bf-a0fd-1d75c2fb7701.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\67d0f3f2-fb57-45f9-8722-dd9cefb807ba.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\67d0f3f2-fb57-45f9-8722-dd9cefb807ba.jpeg"
     },
     {
       "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\7660b9fd-b992-4cec-9148-568ce7149476.jpeg",
@@ -27,6 +39,10 @@
     {
       "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\c9d47a37-7c78-4252-bd68-33653b8cafd1.jpeg",
       "PackagePath": "staticwebassets\\uploads\\c9d47a37-7c78-4252-bd68-33653b8cafd1.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\e0b4ec66-d139-4516-b307-e4dc416ac9a3.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\e0b4ec66-d139-4516-b307-e4dc416ac9a3.jpeg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LedMagazineBack.Microsoft.AspNetCore.StaticWebAssets.props",

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Y56wIhyG8FI46YE4ACi0XVj++VonJ1npui2FDT1MaWg=",
+  "Hash": "D1vPj1O9PWzsugBUzjjmy545IwYlXurk6dxz4M/7PfE=",
   "Source": "LedMagazineBack",
   "BasePath": "_content/LedMagazineBack",
   "Mode": "Default",
@@ -16,6 +16,44 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\1fd630e5-0201-4782-9434-1c2d54169bb1.jpeg",
+      "SourceId": "LedMagazineBack",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\",
+      "BasePath": "_content/LedMagazineBack",
+      "RelativePath": "uploads/1fd630e5-0201-4782-9434-1c2d54169bb1.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\1fd630e5-0201-4782-9434-1c2d54169bb1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\389383e4-6722-4fca-ba60-ff54a00cb40f.jpeg",
+      "SourceId": "LedMagazineBack",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\",
+      "BasePath": "_content/LedMagazineBack",
+      "RelativePath": "uploads/389383e4-6722-4fca-ba60-ff54a00cb40f.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\389383e4-6722-4fca-ba60-ff54a00cb40f.jpeg"
+    },
     {
       "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\4c5f81e8-cd34-4e99-96bd-54cc1799840c.jpeg",
       "SourceId": "LedMagazineBack",
@@ -72,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\632f956a-02b8-48bf-a0fd-1d75c2fb7701.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\67d0f3f2-fb57-45f9-8722-dd9cefb807ba.jpeg",
+      "SourceId": "LedMagazineBack",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\",
+      "BasePath": "_content/LedMagazineBack",
+      "RelativePath": "uploads/67d0f3f2-fb57-45f9-8722-dd9cefb807ba.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\67d0f3f2-fb57-45f9-8722-dd9cefb807ba.jpeg"
     },
     {
       "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\7660b9fd-b992-4cec-9148-568ce7149476.jpeg",
@@ -148,6 +205,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\c9d47a37-7c78-4252-bd68-33653b8cafd1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\uploads\\e0b4ec66-d139-4516-b307-e4dc416ac9a3.jpeg",
+      "SourceId": "LedMagazineBack",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\RiderProjects\\LedMagazineBack\\LedMagazineBack\\wwwroot\\",
+      "BasePath": "_content/LedMagazineBack",
+      "RelativePath": "uploads/e0b4ec66-d139-4516-b307-e4dc416ac9a3.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\e0b4ec66-d139-4516-b307-e4dc416ac9a3.jpeg"
     }
   ]
 }

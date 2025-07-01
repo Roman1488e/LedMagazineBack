@@ -1,3 +1,4 @@
+using LedMagazineBack.Attributes;
 using LedMagazineBack.Models;
 using LedMagazineBack.Models.BlogModels.CreationModels;
 using LedMagazineBack.Models.BlogModels.UpdateModels;
@@ -68,6 +69,7 @@ public class ArticleController(IArticleService articleService) : Controller
 
     [HttpPut("api/articles/{id}/general-info")]
     [Authorize(Roles = "admin")]
+    [Validate]
     public async Task<IActionResult> Update(Guid id,[FromBody] UpdateArticleModel model)
     {
         try
@@ -114,6 +116,7 @@ public class ArticleController(IArticleService articleService) : Controller
 
     [HttpPost("api/articles")]
     [Authorize(Roles = "admin")]
+    [Validate]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> CreateArticle([FromForm] CreateArticleModel model)
     {

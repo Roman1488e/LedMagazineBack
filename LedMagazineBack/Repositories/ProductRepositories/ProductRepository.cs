@@ -74,20 +74,20 @@ public class ProductRepository(MagazineDbContext context) : IProductRepository
 
         if (!string.IsNullOrEmpty(districts))
         {
-            var districtList = districts.Split(',').Select(d => d.Trim()).ToList();
-            query = query.Where(x => districtList.Contains(x.Location.District));
+            var districtList = districts.Split(',').Select(d => d.Trim().ToLower()).ToList();
+            query = query.Where(x => districtList.Contains(x.Location.District.ToLower()));
         }
 
         if (!string.IsNullOrEmpty(screenSizes))
         {
-            var sizeList = screenSizes.Split(',').Select(s => s.Trim()).ToList();
-            query = query.Where(x => sizeList.Contains(x.ScreenSpecifications.ScreenSize));
+            var sizeList = screenSizes.Split(',').Select(s => s.Trim().ToLower()).ToList();
+            query = query.Where(x => x.ScreenSpecifications != null && sizeList.Contains(x.ScreenSpecifications.ScreenSize.ToLower()));
         }
 
         if (!string.IsNullOrEmpty(screenResolutions))
         {
-            var resolutionList = screenResolutions.Split(',').Select(r => r.Trim()).ToList();
-            query = query.Where(x => resolutionList.Contains(x.ScreenSpecifications.ScreenResolution));
+            var resolutionList = screenResolutions.Split(',').Select(r => r.Trim().ToLower()).ToList();
+            query = query.Where(x => x.ScreenSpecifications != null && resolutionList.Contains(x.ScreenSpecifications.ScreenResolution.ToLower()));
         }
 
         if (minPrice >= 0 && maxPrice > 0 && minPrice <= maxPrice)

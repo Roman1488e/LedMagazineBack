@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LedMagazineBack.Migrations
 {
     [DbContext(typeof(MagazineDbContext))]
-    [Migration("20250627035509_second")]
-    partial class second
+    [Migration("20250701062213_main_migration")]
+    partial class main_migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,6 @@ namespace LedMagazineBack.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("VideoUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -134,6 +133,7 @@ namespace LedMagazineBack.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ContactNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsVerified")
@@ -170,7 +170,7 @@ namespace LedMagazineBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid?>("CartId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
@@ -200,13 +200,11 @@ namespace LedMagazineBack.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Latitude")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
 
-                    b.Property<string>("Longitude")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
@@ -243,8 +241,11 @@ namespace LedMagazineBack.Migrations
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("OrderNumber")
-                        .HasColumnType("integer");
+                    b.Property<long>("OrderNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("OrderNumber"));
 
                     b.Property<string>("OrganisationName")
                         .IsRequired()
@@ -453,9 +454,7 @@ namespace LedMagazineBack.Migrations
                 {
                     b.HasOne("LedMagazineBack.Entities.Cart", "Cart")
                         .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CartId");
 
                     b.Navigation("Cart");
                 });
@@ -536,8 +535,7 @@ namespace LedMagazineBack.Migrations
 
             modelBuilder.Entity("LedMagazineBack.Entities.Customer", b =>
                 {
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Cart");
 
                     b.Navigation("Orders");
                 });
@@ -563,11 +561,9 @@ namespace LedMagazineBack.Migrations
                     b.Navigation("Location")
                         .IsRequired();
 
-                    b.Navigation("RentTimeMultiplayer")
-                        .IsRequired();
+                    b.Navigation("RentTimeMultiplayer");
 
-                    b.Navigation("ScreenSpecifications")
-                        .IsRequired();
+                    b.Navigation("ScreenSpecifications");
                 });
 #pragma warning restore 612, 618
         }

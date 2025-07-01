@@ -18,7 +18,23 @@ public class GuestController(IGuestService guestService) : Controller
         return Ok(result);
     }
 
+    [HttpDelete("api/guests/delete-all")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        try
+        {
+            await _guestService.ClearAll();
+            return Ok("Deleted");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpGet("api/guests")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _guestService.GetAll();
@@ -40,6 +56,7 @@ public class GuestController(IGuestService guestService) : Controller
     }
     
     [HttpGet("api/guests/by-sessionId/{sessionId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetBySessionId(Guid sessionId)
     {
         try
