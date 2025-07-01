@@ -66,6 +66,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | GET   | `/api/guests/by-id/{id}`         | guest/admin | Получить гостя по id                        |
 | GET   | `/api/guests/by-sessionId/{sessionId}` | guest/admin | Получить гостя по sessionId           |
 | DELETE| `/api/guests/{sessionId}`        | admin       | Удалить гостя по sessionId                  |
+| DELETE| `/api/guests/delete-all`         | admin       | Удалить всех гостей                         |
 
 ---
 
@@ -130,8 +131,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | POST  | `/api/orders/for-guests`               | guest                 | Создать заказ для гостя                         |
 | POST  | `/api/orders/for-users`                | customer/admin        | Создать заказ для пользователя                  |
 | PUT   | `/api/orders/{id}`                     | authenticated         | Изменить заказ                                  |
-| DELETE| `/api/orders/{id}`                     | authenticated         | Удалить заказ                                   |
-| PUT   | `/api/orders/{id}/accept`              | authenticated         | Принять заказ                                   |
+| DELETE| `/api/orders/{id}`                     | admin                 | Удалить заказ                                   |
+| PUT   | `/api/orders/{id}/accept`              | admin                 | Принять заказ                                   |
+| GET   | `/api/orders/{number}`                 | admin                 | получить заказ по его номеру                    |
 
 ---
 
