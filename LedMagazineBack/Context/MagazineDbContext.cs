@@ -12,6 +12,11 @@ public class MagazineDbContext(DbContextOptions<MagazineDbContext> options) : Db
             .WithOne()
             .HasForeignKey<Location>(l => l.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.RentTimeMultiplayer)
+            .WithOne()
+            .HasForeignKey<RentTimeMultiplayer>(r => r.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Product>()
             .HasOne(p => p.ScreenSpecifications)
