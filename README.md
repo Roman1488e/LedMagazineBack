@@ -203,6 +203,304 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | POST  | `/api/blogs`                           | admin                 | Создать блог                                    |
 | DELETE| `/api/blogs/{id}`                      | admin                 | Удалить блог по id                              |
 
+## Доступные эндпоинты и используемые модели (с валидацией)
+
+> ⚠️ Перечень моделей и валидаторов может быть неполным. Актуальные классы и описание см. в исходниках.  
+> [Смотреть все модели на GitHub →](https://github.com/Roman1488e/LedMagazineBack/tree/main/LedMagazineBack/Models)  
+> [Смотреть все валидаторы на GitHub →](https://github.com/Roman1488e/LedMagazineBack/tree/main/LedMagazineBack/Validators)
+
+---
+
+### Пример описания (далее по каждому эндпоинту):
+
+#### Эндпоинт
+
+`POST /api/orders/for-guests`
+
+#### Ожидаемая модель:
+
+```csharp
+// Models/OrderModels/CreationModels/CreateOrderModel.cs
+public class CreateOrderModel
+{
+    public string OrganisationName { get; set; }
+    public string PhoneNumber { get; set; }
+}
+```
+**Валидация (CreateOrderValidator):**
+- OrganisationName: не null, не пустое, максимум 30 символов
+- PhoneNumber: не null, не пустое, формат Uzbekistan: ^998\d{9}$
+
+---
+
+### Все найденные модели и валидаторы
+
+#### Логин
+
+`POST /api/customers/login`
+
+```csharp
+// Models/UserModels/Auth/LoginModel.cs
+public class LoginModel
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+}
+```
+**Валидация ([Validators/UserValidators/AuthValidators/LoginValidator.cs]):**
+- Username: не null, не пусто, минимум 3 символа, максимум 30 символов
+- Password: не null, не пусто, минимум 6 символов  
+*(см. детали в файле /validators/uservalidators/authvalidators/LoginValidator.cs)*
+
+---
+
+#### Регистрация пользователя
+
+`POST /api/customers/register`
+
+```csharp
+// Models/UserModels/Auth/RegisterModel.cs
+public class RegisterModel
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public string ConfirmPassword { get; set; }
+    public string Name { get; set; }
+    public string OrganisationName { get; set; }
+    public string ContactNumber { get; set; }
+}
+```
+**Валидация ([Validators/UserValidators/AuthValidators/RegisterValidation.cs]):**
+- Username: не null, не пусто, минимум 3 символа, максимум 30 символов
+- Password: не null, не пусто, минимум 6 символов
+- ConfirmPassword: должен совпадать с Password
+- Name: не null, не пусто
+- OrganisationName: не null, не пусто
+- ContactNumber: формат Uzbekistan: ^998\d{9}$  
+*(см. детали в файле /validators/uservalidators/authvalidators/RegisterValidation.cs)*
+
+---
+
+#### Добавление статьи
+
+`POST /api/articles`
+
+```csharp
+// Models/BlogModels/CreationModels/CreateArticleModel.cs
+public class CreateArticleModel
+{
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public IFormFile Image { get; set; }
+    public IFormFile? Video { get; set; }
+    public Guid BlogId { get; set; }
+}
+```
+**Валидация ([Validators/BlogValidators/CreateArticleValidator.cs]):**
+- Title: не null, не пусто, длина (обычно 3-100 символов, см. валидатор)
+- Content: не null, не пусто
+- Image: не null
+- BlogId: не null  
+*(см. детали в файле /validators/blogvalidators/CreateArticleValidator.cs)*
+
+---
+
+#### Обновление статьи
+
+`PUT /api/articles/{id}/general-info`
+
+```csharp
+// Models/BlogModels/UpdateModels/UpdateArticleModel.cs
+public class UpdateArticleModel
+{
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+}
+```
+**Валидация ([Validators/BlogValidators/UpdateArticleValidator.cs]):**
+- Если Title передан: не пусто, длина (обычно 3-100 символов, см. валидатор)
+- Если Content передан: не пусто  
+*(см. детали в файле /validators/blogvalidators/UpdateArticleValidator.cs)*
+
+---
+
+#### Смена роли пользователя
+
+`PUT /api/customers/change-role`
+
+```csharp
+public class UpdateRoleModel
+{
+    public string? Role { get; set; }
+}
+```
+**Валидация ([Validators/UserValidators/ChangeRoleValidation.cs]):**
+- Role: не null, не пусто, одно из: Admin, Guest, Customer
+
+---
+
+#### Смена username
+
+`PUT /api/customers/change-username`
+
+```csharp
+public class UpdateUsernameModel
+{
+    public string? Username { get; set; }
+}
+```
+**Валидация ([Validators/UserValidators/ChangeUsernameValidation.cs]):**
+- Username: не null, не пусто, длина 3-30 символов
+
+---
+
+#### Обновление заказа
+
+`PUT /api/orders/{id}`
+
+```csharp
+public class UpdateOrderModel
+{
+    public string? OrganisationName { get; set; }
+    public string? PhoneNumber { get; set; }
+}
+```
+**Валидация ([Validators/OrderValidators/UpdateValidators/UpdateOrderValidator.cs]):**
+- OrganisationName: если указан — не пусто, максимум 30 символов
+- PhoneNumber: если указан — не пусто, формат ^998\d{9}$
+
+---
+
+#### Создание элемента заказа (OrderItem)
+
+`POST /api/orderitem`
+
+```csharp
+public class CreateOrderItemModel
+{
+    public Guid OrderId { get; set; }
+    public Guid ProductId { get; set; }
+    public int RentMonths { get; set; }
+    public int RentSeconds { get; set; }
+}
+```
+**Валидация ([Validators/OrderValidators/CreateOrderItemValidator.cs]):**
+- OrderId: не null, не пусто
+- ProductId: не null, не пусто
+- RentMonths: > 0
+- RentSeconds: одно из 5/10/15
+
+---
+
+#### Создание мультипликатора времени аренды
+
+`POST /api/rent-time-multiplayers`
+
+```csharp
+public class CreateRentTimeMulModel
+{
+    public int MonthsDifferenceMultiplayer { get; set; }
+    public int SecondsDifferenceMultiplayer { get; set; }
+    public Guid ProductId { get; set; }
+}
+```
+**Валидация ([Validators/RentTimeValidators/CreateRentTimeMulValidator.cs]):**
+- MonthsDifferenceMultiplayer: 1-2
+- SecondsDifferenceMultiplayer: 1-2
+- ProductId: не пусто
+
+---
+
+#### Обновление мультипликатора времени аренды
+
+`PUT /api/rent-time-multiplayers`
+
+```csharp
+public class UpdateRentTimeMultModel
+{
+    public int MonthsDifferenceMultiplayer { get; set; }
+    public int SecondsDifferenceMultiplayer { get; set; }
+    // остальные поля уточните в исходниках
+}
+```
+**Валидация ([Validators/RentTimeValidators/UpdateValidators/UpdateRentTimeMulValidator.cs]):**
+- MonthsDifferenceMultiplayer: не null, 1-2
+- SecondsDifferenceMultiplayer: не null, 1-2
+
+---
+
+#### Обновление времени аренды
+
+`PUT /api/rent-times`
+
+```csharp
+public class UpdateRentTimeModel
+{
+    public int RentMonths { get; set; }
+    public int RentSeconds { get; set; }
+}
+```
+**Валидация ([Validators/RentTimeValidators/UpdateValidators/UpdateRentTimeValidator.cs]):**
+- RentMonths: не null, >0
+- RentSeconds: не null, одно из 5/10/15
+
+---
+
+#### Создание элемента корзины
+
+`POST /api/cartItems`
+
+```csharp
+public class CreateCartItemModel
+{
+    public byte RentSeconds { get; set; }
+    public byte RentMonths { get; set; }
+    public Guid ProductId { get; set; }
+}
+```
+**Валидация:**  
+- (валидатор не найден, проверьте ограничения на уровне контроллера)
+
+---
+
+#### Фильтрация продуктов
+
+`GET /api/products?...`
+
+```csharp
+public class ProductsFilterModel
+{
+    public string? districts  { get; set; }
+    public string? screenSizes {get; set;}
+    public decimal minPrice {get; set;}
+    public decimal maxPrice {get; set;}
+    public string? screenResolutions {get; set;}
+    public bool? isActive  { get; set; }
+    public int page {get; set;}
+    public int pageSize {get; set;}
+}
+```
+**Валидация:**  
+- (валидатор не найден, проверьте ограничения на уровне контроллера)
+
+---
+
+## Валидация в контроллерах
+
+- Для методов, отмеченных атрибутом `[Validate]` или `[Validation]`, все входные модели автоматически валидируются через FluentValidation.
+- Если валидация не проходит — возвращается 400 с описанием ошибок.
+
+---
+
+## FAQ
+
+**Q: Что делать, если 400 с ошибками валидации?**  
+A: Проверьте соответствие данных требованиям модели и валидатора.
+
+---
+
+> **Если необходимы другие модели или полная структура запроса — ищите в исходниках или пишите бэкендеру!**
+
 ---
 
 ## JWT и авторизация
