@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LedMagazineBack.Migrations
 {
     [DbContext(typeof(MagazineDbContext))]
-    [Migration("20250701062213_main_migration")]
+    [Migration("20250701085924_main_migration")]
     partial class main_migration
     {
         /// <inheritdoc />

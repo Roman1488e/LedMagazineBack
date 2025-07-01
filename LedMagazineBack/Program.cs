@@ -113,19 +113,6 @@ app.UseCors(options =>
     options.AllowAnyMethod();
     options.AllowAnyOrigin();
 });
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<MagazineDbContext>();
-        context.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Ошибка при миграции БД: {ex.Message}");
-    }
-}
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LedMagazineBack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2bdcbcff2bd55a3271f4e74d23e750874ba4a3b6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76231afb35c95594a5ca20f7953734356f0591f3")]
 [assembly: System.Reflection.AssemblyProductAttribute("LedMagazineBack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LedMagazineBack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
